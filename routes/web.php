@@ -13,7 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-Route::get('/todolist/', function () {
+Route::get('todo', function () {
     return Inertia::render('todo');
 })->name('todo');
 
