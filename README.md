@@ -1,7 +1,7 @@
 # Laravel v12 Todo list
 
 Training project based on Larvel 12  
-<!-- and youtube video lesson: [Todo List App with Laravel and Vue.js](https://www.youtube.com/watch?v=UHSipe7pSac) -->
+and youtube video lesson: [Todo List: Laravel and React](https://www.youtube.com/watch?v=QZ7xFo2STYs)
 ```
 Welcome.
 ```
