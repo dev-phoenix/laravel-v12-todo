@@ -76,11 +76,21 @@ class TodoController extends Controller
         ]);
     }
 
+    public function updateCompletion(Request $request, Todo $todo)
+    {
+        if($request->completed !=0){
+            $todo->update(["completed" => 0]);
+        }
+        else{
+            $todo->update(["completed" => 1]);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Todo $todo)
     {
-        //
+        $todo->delete();
     }
 }
