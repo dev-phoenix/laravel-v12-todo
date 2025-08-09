@@ -23,9 +23,9 @@ export default function Welcome() {
 
     return (
         <>
-        <TdHeader />
             <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
 
+                <TdHeader title="Todo List" />
                 <div className="mt-4 max-w-6xl mx-auto sm:px-6 lg:px-8 w-full">
                     <div className="flex justify-center mt-4 sm:items-center sm:justify-between">
                         <div className="text-center text-sm text-gray-500 sm:text-left">
@@ -39,7 +39,7 @@ export default function Welcome() {
                         <div className="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
                         </div>
                     </div>
-                    <div id="-app" className=" mt-4 text-gray-500 todo-container">
+                    <div id="-app" className=" mt-4 text-gray-500 todo-container mb-4">
                         <TodoBlock incompleteTodos={incompleteTodos} completeTodos={completeTodos}/>
                     </div>
                 </div>

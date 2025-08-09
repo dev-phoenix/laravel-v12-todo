@@ -35,7 +35,14 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required'],
+        ], [
+            'name.required' => 'Item name is required!',
+        ]);
+        Todo::create([
+            'name' => $request->name,
+        ]);
     }
 
     /**
@@ -59,7 +66,14 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        //
+        $request->validate([
+            'name' => ['required'],
+        ], [
+            'name.required' => 'Item name is required!',
+        ]);
+        $todo->update([
+            'completed' => $request->completed,
+        ]);
     }
 
     /**

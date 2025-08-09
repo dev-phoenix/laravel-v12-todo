@@ -22,4 +22,8 @@ export default defineConfig({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
+    // server: {
+    //     host: 'lara.12.helper.ts', // Match Laravel's host
+    //     port: 9000, // Match Laravel's port
+    // },
 });

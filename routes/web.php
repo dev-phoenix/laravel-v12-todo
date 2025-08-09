@@ -18,7 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Route::get('todo', function () {
 //     return Inertia::render('todo');
 // })->name('todo');
+
 Route::get('todos', [TodoController::class, 'index'])->name('todos.index');
+Route::post('todos', [TodoController::class, 'store'])->name('todos.store');
+Route::patch('todos/{todo}', [TodoController::class, 'update'])->name('todos.update');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

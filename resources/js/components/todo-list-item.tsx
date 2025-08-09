@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
+import { useForm } from '@inertiajs/react';
 
 library.add(fas, far, fab)
 
@@ -18,6 +19,23 @@ function TodoListItem({item}) {
     console.log('TodoListItem item', item);
     const updateCheck = () => {console.log('updateCheck', item);
         useIsChecked((state) => {state = !state; return state;});
+    }
+
+    const {
+        data, setData, patch, errors, reset
+    } = useForm({
+        "id" : item.id,
+        "name" : item.name,
+        "completed" : !item.completed,
+    });
+
+    const updateTodo = (e) => {
+        console.log(e);
+        e.preventDefault();
+        patch(route('todos.update', {...item, 'completed': !item.completed}), {
+            preserveScroll: true,
+            onSuccess: () => reset(),
+        })
     }
 
     return (
@@ -34,8 +52,9 @@ function TodoListItem({item}) {
                 <input type="checkbox"
                     // @change="updateCheck()" v-model="item.completed"
                     checked={isChecked? true: false}
-                    onChange={updateCheck}
-                    value="" className="sr-only peer"/>
+                    onChange={updateTodo}
+                    value=""
+                    className="sr-only peer"/>
                 <div className="shrink-0 relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
                 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700
                 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
@@ -43,6 +62,12 @@ function TodoListItem({item}) {
                 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
                 after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600
                 dark:peer-checked:bg-green-600"></div>
+                <span className={[
+                        "ms-3 text-sm font-medium --text-gray-900 --dark:text-gray-300",
+                        "cursor-pointer text-gray-500/50",
+                    ].join(' ')}
+                    // :class="[item.completed ? 'completed text-gray-500' : 'text-gray-300', '']"
+                >#{ item.id }</span>
                 <span className={[
                         "ms-3 text-sm font-medium text-gray-900 dark:text-gray-300",
                         "cursor-pointer",
@@ -53,13 +78,15 @@ function TodoListItem({item}) {
             </label>
             {/* <!-- input type="checkbox" @change="updateCheck()" v-model="item.completed" className="" --> */}
 
+            <div className="grow-0 flex items-start justify-center">
                 <button type="submit" className=" ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4
-                focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center
+                focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-1 text-center
                 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
                         cursor-pointer"
                 // @click="removeItem()"
                 ><FontAwesomeIcon icon="fa-solid fa-trash" />
                 </button>
+            </div>
         </div>
     );
 }
