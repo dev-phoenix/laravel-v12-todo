@@ -5,10 +5,9 @@ and youtube video lesson: [Todo List: Laravel and React](https://www.youtube.com
 ```
 Welcome.
 ```
-### Laravel 12, Tailwindcss 4, React.js 19, MySQL
-<!-- , Fontawesome icons -->
+### Laravel 12, Tailwindcss 4, React.js 19, MySQL, Fontawesome icons
 
-<!-- ![peview](_src/imgs/image.png) -->
+![peview](_src/imgs/image.png)
 
 # Todo List based on Laravel 8
 **Contains:**  
