@@ -22,7 +22,7 @@ function TodoListItem({item}) {
     }
 
     const {
-        data, setData, patch, errors, reset
+        data, setData, patch, put, delete: destroy, errors, reset
     } = useForm({
         "id" : item.id,
         "name" : item.name,
@@ -30,9 +30,25 @@ function TodoListItem({item}) {
     });
 
     const updateTodo = (e) => {
-        console.log(e);
+        // console.log(e);
         e.preventDefault();
         patch(route('todos.update', {...item, 'completed': !item.completed}), {
+            preserveScroll: true,
+            onSuccess: () => reset(),
+        })
+    }
+
+    const deleteTodo = (e) => {
+        // console.log(e);
+        e.preventDefault();
+        destroy(route('todos.destroy', {...item}), {
+            preserveScroll: true,
+            onSuccess: () => reset(),
+        })
+    }
+
+    const completeTodo = (e) =>{
+        put(route('todos.updateCompletion', item), {
             preserveScroll: true,
             onSuccess: () => reset(),
         })
@@ -69,9 +85,10 @@ function TodoListItem({item}) {
                     // :class="[item.completed ? 'completed text-gray-500' : 'text-gray-300', '']"
                 >#{ item.id }</span>
                 <span className={[
-                        "ms-3 text-sm font-medium text-gray-900 dark:text-gray-300",
+                        "ms-3 text-sm font-medium",
+                        // "ms-3 text-sm font-medium text-gray-900 dark:text-gray-300",
                         "cursor-pointer",
-                        (item.completed ? 'completed text-gray-500' : 'text-gray-300')
+                        (item.completed ? 'completed line-through text-gray-500' : 'text-gray-300')
                     ].join(' ')}
                     // :class="[item.completed ? 'completed text-gray-500' : 'text-gray-300', '']"
                 > { item.name }</span>
@@ -84,6 +101,7 @@ function TodoListItem({item}) {
                 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
                         cursor-pointer"
                 // @click="removeItem()"
+                    onClick={deleteTodo}
                 ><FontAwesomeIcon icon="fa-solid fa-trash" />
                 </button>
             </div>
