@@ -41,10 +41,12 @@ function TodoListItem({item}) {
     const deleteTodo = (e) => {
         // console.log(e);
         e.preventDefault();
-        destroy(route('todos.destroy', {...item}), {
-            preserveScroll: true,
-            onSuccess: () => reset(),
-        })
+        if(confirm('Are you shure?')){
+            destroy(route('todos.destroy', {...item}), {
+                preserveScroll: true,
+                onSuccess: () => reset(),
+            })
+        }
     }
 
     const completeTodo = (e) =>{

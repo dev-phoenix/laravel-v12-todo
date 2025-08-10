@@ -7,12 +7,26 @@ Welcome.
 ```
 ### Laravel 12, Tailwindcss 4, React.js 19, MySQL, Fontawesome icons
 
-![peview](_src/imgs/image.png)
+![peview](_src/imgs/image_2.png)
 
-# Todo List based on Laravel 8
+### Todo List based on Laravel 8
 **Contains:**  
 Laravel 12, Tailwindcss 4, React.js 19, MySQL, Fontawesome icons
 
+---
+
+### Functionality:
+- Create todo item.
+- Change todo item complete status.
+- Delete todo item.
+
+### Features:
+Completed and uncompleted lists have self own columns for better viewing.
+
+---
+
+### The time spent for todolist app creating:
+![peview](_src/imgs/lara12.todo.timing.png)
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 

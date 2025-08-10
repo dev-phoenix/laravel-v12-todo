@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Foundation\Application;
 
 class TodoController extends Controller
 {
@@ -19,6 +20,8 @@ class TodoController extends Controller
         return Inertia::render('todos', [
             'completeTodos' => Todo::where('completed', 1)->latest()->get(),
             'incompleteTodos' => Todo::where('completed', 0)->latest()->get(),
+            'laraVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
         ]);
     }
 
