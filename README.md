@@ -7,7 +7,7 @@ Welcome.
 ```
 ### Laravel 12, Tailwindcss 4, React.js 19, MySQL, Fontawesome icons
 
-![peview](_src/imgs/image.png)
+![peview](_src/imgs/image_2.png)
 
 ### Todo List based on Laravel 8
 **Contains:**  
@@ -19,6 +19,9 @@ Laravel 12, Tailwindcss 4, React.js 19, MySQL, Fontawesome icons
 - Create todo item.
 - Change todo item complete status.
 - Delete todo item.
+
+### Features:
+Completed and uncompleted lists have self own columns for better viewing.
 
 ---
 
