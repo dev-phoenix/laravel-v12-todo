@@ -122,7 +122,7 @@ export default function Welcome() {
                             </svg>
                             <svg
                                 className="relative -mt-[4.9rem] -ml-8 w-[448px] max-w-none lg:-mt-[6.6rem] lg:ml-0 dark:hidden"
-                                viewBox="0 0 440 76"
+                                viewBox="0 0 440 376"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
