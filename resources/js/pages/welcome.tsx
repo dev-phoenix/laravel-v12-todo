@@ -1,3 +1,4 @@
+import { NavMainTop } from '@/components/nav-main-top';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 
@@ -38,8 +39,13 @@ export default function Welcome() {
                         )}
                     </nav>
                 </header>
-                <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
+                <div className="flex w-full flex-col items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
+
+                    <div className="mt-4 max-w-[335px]  lg:max-w-4xl mx-auto sm:px-6 lg:px-8 w-full">
+                        <NavMainTop />
+                    </div>
+
+                    <main className="mt-4 flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
                         <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
                             <h1 className="mb-1 font-medium">Let's get started</h1>
                             <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
