@@ -28,8 +28,9 @@ Route::delete('todos/{todo}', [TodoController::class, 'destroy'])->name('todos.d
 
 Route::get('coverletters', [CoverLetterController::class, 'index'])->name('coverletters.index');
 Route::post('coverletters', [CoverLetterController::class, 'store'])->name('coverletters.store');
-Route::patch('coverletters/{coverletter}', [CoverLetterController::class, 'update'])->name('coverletters.update');
-Route::delete('coverletters/{coverletter}', [CoverLetterController::class, 'destroy'])->name('coverletters.destroy');
+Route::patch('coverletters/{coverLetter}', [CoverLetterController::class, 'update'])->name('coverletters.update');
+Route::patch('coverletters/complete/{coverLetter}', [CoverLetterController::class, 'complete'])->name('letters.complete');
+Route::delete('coverletters/{coverLetter}', [CoverLetterController::class, 'destroy'])->name('coverletters.destroy');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

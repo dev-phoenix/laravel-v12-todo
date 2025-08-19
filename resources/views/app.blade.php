@@ -28,6 +28,16 @@
             html.dark {
                 background-color: oklch(0.145 0 0);
             }
+            ::backdrop {
+                background-image: linear-gradient(
+                    45deg,
+                    magenta,
+                    rebeccapurple,
+                    dodgerblue,
+                    green
+                );
+                opacity: 0.25;
+            }
         </style>
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>

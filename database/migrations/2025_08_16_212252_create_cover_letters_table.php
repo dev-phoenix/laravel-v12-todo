@@ -14,11 +14,12 @@ return new class extends Migration
     {
         Schema::create('cover_letters', function (Blueprint $table) {
             /*
-            resource
             url
+            chat
             company
-            name
+            contact_name
             status
+            title
             info
             text
             */

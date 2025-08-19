@@ -50,7 +50,7 @@ export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
     const { letters,
         laraVersion, phpVersion }: PageProps = usePage().props as PageProps;
-    console.log('letters', letters);
+    // console.log('letters', letters);
 
     return (
         <>

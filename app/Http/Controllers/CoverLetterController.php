@@ -15,7 +15,7 @@ class CoverLetterController extends Controller
     public function index()
     {
         return Inertia::render('coverletters', [
-            'letters' => CoverLetter::select('*')->get(),
+            'letters' => CoverLetter::select('*')->latest()->get(),
             'laraVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
         ]);
@@ -34,41 +34,56 @@ class CoverLetterController extends Controller
      */
     public function store(Request $request)
     {
+        // echo 'CoverLetterController->store: ';
+        $data = $this->prepare_data($request);
+        $coverLetter = CoverLetter::create($data);
+        // return response()->json([
+        //     'message' => 'Cover letter created successfully',
+        //     'data' => $coverLetter,
+        // ], 201);
+    }
+
+    private function prepare_data($request){
         /*
-        resource
         url
+        chat
         company
-        name
+        contact_name
         status
+        title
         info
         text
         */
         $request->validate([
-            'resource' => ['required'],
             'url' => ['required'],
+            'chat' => ['required'],
             'company' => ['required'],
-            'name' => ['required'],
+            'contact_name' => ['required'],
             'status' => ['required'],
+            'title' => ['required'],
             'info' => ['required'],
-            'text' => ['required'],
+            'content' => ['required'],
         ], [
-            'resource.required' => 'Item resource is required!',
-            'url.required' => 'Item url is required!',
-            'company.required' => 'Item company is required!',
-            'name.required' => 'Item name is required!',
-            'status.required' => 'Item status is required!',
-            'info.required' => 'Item info is required!',
-            'text.required' => 'Item text is required!',
+            'url.required' => 'url is required!',
+            'chat.required' => 'chat is required!',
+            'company.required' => 'company is required!',
+            'contact_name.required' => 'contact name is required!',
+            'status.required' => 'status is required!',
+            'title.required' => 'title is required!',
+            'info.required' => 'info is required!',
+            'content.required' => 'content is required!',
         ]);
-        CoverLetter::create([
-            'resource' => $request->resource,
+        $data = [
             'url' => $request->url,
+            'chat' => $request->chat,
             'company' => $request->company,
-            'name' => $request->name,
+            'contact_name' => $request->contact_name,
             'status' => $request->status,
+            'title' => $request->title,
             'info' => $request->info,
-            'text' => $request->text,
-        ]);
+            'content' => $request->content,
+        ];
+        return $data;
     }
 
     /**
@@ -92,32 +107,18 @@ class CoverLetterController extends Controller
      */
     public function update(Request $request, CoverLetter $coverLetter)
     {
-        $request->validate([
-            'resource' => ['required'],
-            'url' => ['required'],
-            'company' => ['required'],
-            'name' => ['required'],
-            'status' => ['required'],
-            'info' => ['required'],
-            'text' => ['required'],
-        ], [
-            'resource.required' => 'Item resource is required!',
-            'url.required' => 'Item url is required!',
-            'company.required' => 'Item company is required!',
-            'name.required' => 'Item name is required!',
-            'status.required' => 'Item status is required!',
-            'info.required' => 'Item info is required!',
-            'text.required' => 'Item text is required!',
-        ]);
-        $coverLetter->update([
-            'resource' => $request->resource,
-            'url' => $request->url,
-            'company' => $request->company,
-            'name' => $request->name,
-            'status' => $request->status,
-            'info' => $request->info,
-            'text' => $request->text,
-        ]);
+        $data = $this->prepare_data($request);
+        $coverLetter->update($data);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function complete(Request $request, CoverLetter $coverLetter)
+    {
+        $data = $this->prepare_data($request);
+        $data = array_filter($data, function ($k) { return $k == 'status'; }, ARRAY_FILTER_USE_KEY );
+        $coverLetter->update($data);
     }
 
     /**
