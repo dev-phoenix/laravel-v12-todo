@@ -10,13 +10,15 @@ class CoverLetter extends Model
     /** @use HasFactory<\Database\Factories\CoverLetterFactory> */
     use HasFactory;
     protected $fillable = [
-            'url',
-            'chat',
-            'company',
-            'contact_name',
-            'status',
-            'title',
-            'info',
-            'content',
-        ];
+        'hide',
+        'url',
+        'chat',
+        'company',
+        'contact_name',
+        'stage',
+        'status',
+        'title',
+        'info',
+        'content',
+    ];
 }

@@ -12,19 +12,20 @@ text
 import { useEffect, useRef, useState } from "react";
 import { CoverLetterForm } from "./cover-letter-form";
 import CoverLetterItem from "./cover-letter-item";
+import { CoverLetter } from "./todo/cl-helper";
 // import { CoverLetterItem } from "./cover-letter-item";
 
-interface CoverLetter {
-    id: number,
-    url: string,
-    chat: string,
-    company: string,
-    contact_name: string,
-    status: string,
-    title: string,
-    info: string,
-    content: string,
-}
+// interface CoverLetter {
+//     id: number,
+//     url: string,
+//     chat: string,
+//     company: string,
+//     contact_name: string,
+//     status: string,
+//     title: string,
+//     info: string,
+//     content: string,
+// }
 
 interface PageProps {
     letters: CoverLetter[],
@@ -105,7 +106,8 @@ function CoverLetterBlock ({letters}: PageProps){
         "info" : '',
         "content" : '',
     }
-    // console.log('letters', letters);
+    console.log('%c letters', 'color: yellow');
+    console.table(letters);
     const [CLDialogOpen, setCLDialogOpen] = useState(false);
     const [clItem, setClItem] = useState(itemEmpty);
 
@@ -113,7 +115,10 @@ function CoverLetterBlock ({letters}: PageProps){
         setCLDialogOpen(st=>!st);
     }
 
-    const formHandler = {'setData': ()=>{console.log('no catch set data')}}
+    const formHandler = {
+        'setData': ()=>{console.log('no catch set data')},
+        'setData2': ()=>{console.log('no catch set data')},
+    }
 
     const selectItem = (clItem) => {
         console.log('clItem', clItem)
@@ -155,17 +160,24 @@ function CoverLetterBlock ({letters}: PageProps){
                             <div className="w-full" key={"some"}>
 
                                 {letters.map((cl,ind)=>(
-                                    <>
-                                        <CoverLetterItem key={cl.id} item={cl} select={selectItem} />
-                                    </>
+                                    <CoverLetterItem key={cl.id} item={cl} select={selectItem} />
                                 ))}
 
                             </div>
                         </div>
                     </div>
                 </div>
-                <CLDialog isOpen={CLDialogOpen} onClose={dialogFormOpen}
-                    children={<CoverLetterForm item={clItem} formHandler={formHandler} close={dialogFormOpen} />} />
+                <CLDialog
+                    isOpen={CLDialogOpen}
+                    onClose={dialogFormOpen}
+                    children={
+                        <CoverLetterForm
+                            item={clItem}
+                            select={selectItem}
+                            formHandler={formHandler}
+                            close={dialogFormOpen}
+                        />}
+                />
         </>
     );
 }

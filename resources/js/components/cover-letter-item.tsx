@@ -9,38 +9,30 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { router, useForm } from '@inertiajs/react';
+import { CoverLetter, Dict, Stages, StatusColor, Statuses, StatusTextColor } from './todo/cl-helper';
 // import { Shield } from 'lucide-react';
 
 library.add(fas, far, fab)
-
-interface CoverLetter {
-    id: number,
-    url: string,
-    chat: string,
-    company: string,
-    contact_name: string,
-    status: string,
-    title: string,
-    info: string,
-    content: string,
-}
 
 interface CLItem {
     item: CoverLetter,
     select: any,
 }
-let statuses: string[] = ['tpl', 'sent', '1 hr', '2 tech', '3 cheef', 'offer', 'reject']
-let statusColor: {[key:string]:string} = {'tpl': 'slate', 'sent': 'emerald', '1 hr': 'fuchsia', '2 tech': 'sky', '3 cheef': 'lime', 'offer': 'pink', 'reject': 'zinc'}
 
-let statusTextColor: {[key:string]:string} = {'slate': 'gray', 'emerald': 'gray', 'fuchsia': 'gray',
-    'sky': 'gray', 'lime': 'gray', 'pink': 'gray', 'zinc': 'gray'}
 
-function getNextStatus(status:any) {
-    let pos = statuses.indexOf(status)
-    if(pos == -1) return statuses[0]
+let stages = Stages
+let statuses = Statuses
+let statusColor = StatusColor
+let statusTextColor = StatusTextColor
+let somedict: Dict = {}
+
+function getNextStatus(status: any, list: null|string[] = statuses) {
+    if(!list) list = statuses
+    let pos = list.indexOf(status)
+    if(pos == -1) return list[0]
     pos += 1
-    if(pos >= statuses.length) pos = 0
-    return statuses[pos]
+    if(pos >= list.length) pos = 0
+    return list[pos]
 }
 function getColorStatus(status:string) {
     if(!(status in statusColor)) status = 'tpl'
@@ -89,13 +81,21 @@ export function DivClassGenerator() {
 }
 
 export default function CoverLetterItem({item, select}: CLItem){
-    const [isChecked, setIsChecked] = useState(item.status == 'offer' || item.status == 'completed'? true: false);
+    const [isChecked, setIsChecked] = useState(item.status == 'offer'? true: false);
 
+    item['stage'] = item['stage'] || 'tpl';
     const {
         data, setData, patch, put, delete:destroy, errors, reset
     } = useForm(item);
 
     const formRef = useRef(null)
+    // console.log('CoverLetterItem', item.id, isChecked);
+    console.log(`%c CoverLetterItem %c${item.id} ${item.stage} %c${item.status}`,
+        'font-size:16px;color:aqua;',
+        'font-size:16px;color:yellow;',
+        'font-size:16px;color:#50c878;',
+        // data.stage, data.status
+    )
 
     if(item.id == 8){
 
@@ -106,8 +106,10 @@ export default function CoverLetterItem({item, select}: CLItem){
     }
 
     useEffect(()=>{
-        if(item.id in [8, 3]){
-            console.log('%c useEffect','font-size:16px;color:aqua;', data.status)
+        // if(!data.stage) setData('stage', 'tpl')
+        if(item.id in [7]){
+            console.log('%c useEffect stage','font-size:16px;color:aqua;', data.stage)
+            console.log('%c useEffect status','font-size:16px;color:aqua;', data.status)
         }
         // setIsChecked(status => !status ? true: false)
 
@@ -236,7 +238,7 @@ export default function CoverLetterItem({item, select}: CLItem){
                         ].join(' ')}
                         // :class="[item.completed ? 'completed text-gray-500' : 'text-gray-300', '']"
                         onClick={setNextStatus}
-                    > { item.title } { data.status }</span>
+                    > { item.title } { data.stage } { data.status }</span>
             </form>
             {/* <!-- input type="checkbox" @change="updateCheck()" v-model="item.completed" className="" --> */}
 
