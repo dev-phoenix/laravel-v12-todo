@@ -1,6 +1,7 @@
 // resources/js/components/cover-letter-item.jsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, MouseEvent, MouseEventHandler,
+    useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -10,14 +11,11 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { router, useForm } from '@inertiajs/react';
 import { CoverLetter, Dict, Stages, StatusColor, Statuses, StatusTextColor } from './todo/cl-helper';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid';
 // import { Shield } from 'lucide-react';
 
 library.add(fas, far, fab)
 
-interface CLItem {
-    item: CoverLetter,
-    select: any,
-}
 
 
 let stages = Stages
@@ -57,9 +55,10 @@ function classGenerator() {
 }
 
 export function Shield({status='tpl'}) {
+    if(!status) status = 'tpl'
     let bg = getColorStatus(status)
     let color = getColorText(bg)
-    let cl = ["flex items-center --p-4 --mb-4 text-sm ml-4 px-2 py-1 ",
+    let cl = ["flex items-center --p-4 --mb-4 text-sm ml-2 px-2 py-1 ",
             "border border-", bg, "-800 rounded-lg bg-", bg, "-500 ",
             "dark:bg-", bg, "-500 text-", color, "-50 dark:border-", bg, "-800"].join('')
     return (
@@ -80,10 +79,16 @@ export function DivClassGenerator() {
     )
 }
 
-export default function CoverLetterItem({item, select}: CLItem){
+interface CLItem {
+    item: CoverLetter,
+    select: any,
+    formHandler: Dict,
+}
+
+export default function CoverLetterItem({item, select, formHandler}: CLItem){
     const [isChecked, setIsChecked] = useState(item.status == 'offer'? true: false);
 
-    item['stage'] = item['stage'] || 'tpl';
+    // item['stage'] = item['stage'] || 'tpl';
     const {
         data, setData, patch, put, delete:destroy, errors, reset
     } = useForm(item);
@@ -106,8 +111,9 @@ export default function CoverLetterItem({item, select}: CLItem){
     }
 
     useEffect(()=>{
+        setData(item)
         // if(!data.stage) setData('stage', 'tpl')
-        if(item.id in [7]){
+        if(item.id in {5:7}){
             console.log('%c useEffect stage','font-size:16px;color:aqua;', data.stage)
             console.log('%c useEffect status','font-size:16px;color:aqua;', data.status)
         }
@@ -151,7 +157,7 @@ export default function CoverLetterItem({item, select}: CLItem){
         setTimeout(()=>{patch(route('letters.complete', {...data}), {preserveScroll: true,})}, 500)
     }
 
-    const setNextStatus = (ev:any) => {
+    const setNextStatus = (ev: MouseEvent<HTMLInputElement>) => {
         ev.preventDefault();
         ev.stopPropagation();
         let stat = getNextStatus(data.status)
@@ -169,13 +175,19 @@ export default function CoverLetterItem({item, select}: CLItem){
         // if(formRef.current) formRef.current.submit()
     }
 
-    const formSumbit = (ev:any) => {
+    const formSumbit = (ev: FormEvent<HTMLInputElement>) => {
         console.log('%c formSumbit', 'font-size:16px;color:red;', '')
         ev.preventDefault();
         ev.stopPropagation();
         setTimeout(()=>{patch(route('letters.complete', data))}, 500)
-        setTimeout(()=>{patch(route('letters.complete', data))}, 1500)
+        // setTimeout(()=>{patch(route('letters.complete', data))}, 1500)
         return false;
+    }
+
+    const hideCL: MouseEventHandler = (ev: MouseEvent<HTMLInputElement>) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        patch(route('letters.hide', data))
     }
 
     // console.log('TodoListItem item', item);
@@ -184,7 +196,10 @@ export default function CoverLetterItem({item, select}: CLItem){
         <div
             className="item ml-4 mr-4 item --w-full rounded-md border border-gray-500 bg-gray-800 mt-4 p-4
                 flex align-center justify-between"
-                onClick={(ev)=>{select(item)}}
+                onClick={(ev)=>{
+                    formHandler['setDataItem'] = setData
+                    select(item)}
+                }
                 >
             {/* <!-- <div className="flex items-center mb-4">
                 <input id="checkbox-2" type="checkbox"
@@ -238,21 +253,25 @@ export default function CoverLetterItem({item, select}: CLItem){
                         ].join(' ')}
                         // :class="[item.completed ? 'completed text-gray-500' : 'text-gray-300', '']"
                         onClick={setNextStatus}
-                    > { item.title } { data.stage } { data.status }</span>
+                    > { item.title } {/* data.stage } { data.status */}</span>
             </form>
             {/* <!-- input type="checkbox" @change="updateCheck()" v-model="item.completed" className="" --> */}
 
-            <div className="grow-0 flex items-start justify-center gap-4">
+            <div className="grow-0 flex items-start justify-center gap-0">
                 {/* <div className={classGenerator()} ></div> */}
                 {/* <div className={classGenerator()} ></div> */}
                 <Shield status={data.status} />
+                <Shield status={data.stage} />
                 <button type="submit" className=" ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4
                 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-1 text-center
                 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
                         cursor-pointer"
                 // @click="removeItem()"
                     // onClick={deleteTodo}
-                ><FontAwesomeIcon icon="fa-solid fa-trash" />
+                    onClick={hideCL}
+                >
+                    {/* <FontAwesomeIcon icon="fa-solid fa-eye-slash" /> */}
+                    {data.hide?<EyeIcon aria-hidden="true" className="size-5" />:<EyeSlashIcon aria-hidden="true" className="size-5" />}
                 </button>
             </div>
         </div>

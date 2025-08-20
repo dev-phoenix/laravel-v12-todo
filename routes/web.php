@@ -27,9 +27,11 @@ Route::put('todos/{todo}', [TodoController::class, 'updateCompletion'])->name('t
 Route::delete('todos/{todo}', [TodoController::class, 'destroy'])->name('todos.destroy');
 
 Route::get('coverletters', [CoverLetterController::class, 'index'])->name('coverletters.index');
+Route::get('cl-hidden', [CoverLetterController::class, 'clHidden'])->name('coverletters.hidden');
 Route::post('coverletters', [CoverLetterController::class, 'store'])->name('coverletters.store');
 Route::patch('coverletters/{coverLetter}', [CoverLetterController::class, 'update'])->name('coverletters.update');
 Route::patch('coverletters/complete/{coverLetter}', [CoverLetterController::class, 'complete'])->name('letters.complete');
+Route::patch('coverletters/hide/{coverLetter}', [CoverLetterController::class, 'hide'])->name('letters.hide');
 Route::delete('coverletters/{coverLetter}', [CoverLetterController::class, 'destroy'])->name('coverletters.destroy');
 
 require __DIR__.'/settings.php';

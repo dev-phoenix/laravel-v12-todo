@@ -15,7 +15,22 @@ class CoverLetterController extends Controller
     public function index()
     {
         return Inertia::render('coverletters', [
-            'letters' => CoverLetter::select('*')->latest()->get(),
+            'letters' => CoverLetter::select('*')->where('hide', 0)->latest()->get(),
+            // 'lettersHidden' => CoverLetter::select('*')->where('hide', 1)->latest()->get(),
+            'title' => "Cover Letters",
+            'laraVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function clHidden()
+    {
+        return Inertia::render('coverletters', [ // clhidden
+            // 'letters' => CoverLetter::select('*')->where('hide', 0)->latest()->get(),
+            'letters' => CoverLetter::select('*')->where('hide', 1)->latest()->get(),
+            'title' => "Hidden Cover Letters",
             'laraVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
         ]);
@@ -133,12 +148,13 @@ class CoverLetterController extends Controller
      */
     public function hide(Request $request, CoverLetter $coverLetter)
     {
-        $request->validate(
-            [ 'hide' => ['required'], ],
-            [ 'hide.required' => 'hide is required!', ]
-        );
-        $data = [ 'hide' => $request->hide, ];
+        // $request->validate(
+        //     [ 'hide' => ['required'], ],
+        //     [ 'hide.required' => 'hide is required!', ]
+        // );
+        $data = [ 'hide' => !$request->hide, ];
         $coverLetter->update($data);
+        // return $data
     }
 
     /**

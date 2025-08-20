@@ -15,7 +15,7 @@ interface CoverLetter {
     info: string,
     content: string,
 }
-interface Dict { [key:string]: string|number }
+interface Dict { [key:string]: string|number|any }
 let Stages: string[] = ['tpl', 'open', 'closed', 'reject']
 let Statuses: string[] = ['tpl', 'sent', '1 hr', '2 tech', '3 cheef', 'offer', 'reject']
 let stages: string[] = ['tpl', 'open', 'closed', 'reject']

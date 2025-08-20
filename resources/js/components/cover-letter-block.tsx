@@ -29,6 +29,7 @@ import { CoverLetter } from "./todo/cl-helper";
 
 interface PageProps {
     letters: CoverLetter[],
+    title: string,
 }
 interface DialogArgs {
     isOpen: any,
@@ -94,13 +95,15 @@ function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
     );
 }
 
-function CoverLetterBlock ({letters}: PageProps){
+function CoverLetterBlock ({letters, title}: PageProps){
 
     const itemEmpty = {
+        "hide" : false,
         "url" : 'a',
         "chat" : 'b',
         "company" : 'c',
         "contact_name" : '',
+        "stage" : '',
         "status" : '',
         "title" : '',
         "info" : '',
@@ -116,11 +119,11 @@ function CoverLetterBlock ({letters}: PageProps){
     }
 
     const formHandler = {
-        'setData': ()=>{console.log('no catch set data')},
-        'setData2': ()=>{console.log('no catch set data')},
+        'setData': (e?:any)=>{console.log('no catch set data')},
+        'setDataItem': (e?:any)=>{console.log('no catch set data')},
     }
 
-    const selectItem = (clItem) => {
+    const selectItem = (clItem:any) => {
         console.log('clItem', clItem)
         // setClItem(clItem)
         formHandler['setData'](clItem)
@@ -132,7 +135,13 @@ function CoverLetterBlock ({letters}: PageProps){
         <>
                 <div className="todo-list-container flex flex-col items-center border border-purple-700 w-full rounded-md pb-8 pt-8">
                     <div className="heading flex flex-col items-center w-full">
-                        <h2 id="todo-title">Cover Letter List</h2>
+                        <div className="flex gap-2">
+
+                            <h2 id="todo-title">Cover Letter List </h2>
+                            <div className="shrnk-0">
+                                ( <a href="/cl-hidden" className="mx-1 underline">Hidden</a> )
+                            </div>
+                        </div>
                             {/* <todo-form v-on:reloadlist="getList()"/> */}
                         {/* <CoverLetterForm /> */}
                         <div className="w-full">
@@ -156,11 +165,15 @@ function CoverLetterBlock ({letters}: PageProps){
                         v-on:reloadlist="getList()"/> */}
                     <div className="w-full flex items-start justify-between pt-4 pl-4 pr-4 gap-4">
                         <div className="w-full flex flex-col items-center border border-purple-700 rounded-md pb-4 pt-4">
-                            <h3>Cover Letters:</h3>
+                            <h3>{title}:</h3>
                             <div className="w-full" key={"some"}>
 
                                 {letters.map((cl,ind)=>(
-                                    <CoverLetterItem key={cl.id} item={cl} select={selectItem} />
+                                    <CoverLetterItem key={cl.id}
+                                        item={cl}
+                                        select={selectItem}
+                                        formHandler={formHandler}
+                                    />
                                 ))}
 
                             </div>

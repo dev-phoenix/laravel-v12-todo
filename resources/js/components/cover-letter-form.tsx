@@ -96,8 +96,9 @@ function StatusIcon({status}:any){
     )
 }
 
-function CLStatusList({list, value='tpl', setdata, field}: any) {
+function CLStatusList({list, value='tpl', setdata, field, defaultValue='tpl'}: any) {
     // const [selected, setSelected] = useState(value)
+    if(value == '') value = defaultValue;
 
     let selected = value
     console.log('CLStatusList', field, value, selected)
@@ -180,6 +181,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
         data, setData, post, patch, errors, reset
     } = useForm(item);
     formHandler['setData'] = setData
+    formHandler['formData'] = data
     console.log('CoverLetterForm', item, data)
 
     const sendLetter = (e) => {
@@ -193,7 +195,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
         } else {
             addLetter(e)
         }
-        select(data)
+        // select(data)
     }
 
     const addLetter = (e) => {
@@ -210,8 +212,10 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
         patch(route('coverletters.update', data), {
             preserveScroll: true,
             onSuccess: () => {
+                formHandler['setDataItem'](data)
                 close()
-                reset()},
+                reset()
+            },
         })
     }
 
@@ -361,33 +365,27 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
                                 <label htmlFor="item-stage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item stage</label>
-                                {/* <input type="text" id="item-stage" className="shadow-xs bg-gray-50 border border-gray-300
-                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                    placeholder="Input item stage value"
-                                    onChange={e => setData('stage', e.target.value)}
+                                <CLStatusList
+                                    list={stages}
                                     value={data.stage}
-                                    /> */}
-                                    {/*name="name" v-model="item.name"*/}
-                                <CLStatusList list={stages} value={data.stage} setdata={setData} field="stage" />
+                                    setdata={setData}
+                                    field="stage"
+                                    defaultValue='tpl'
+                                    />
                             </div>
                             { errors.stage && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.stage || 'empty!'}</p> }
                         </div>
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
                                 <label htmlFor="item-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item status</label>
-                                {/* <input type="text" id="item-status" className="shadow-xs bg-gray-50 border border-gray-300
-                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                    placeholder="Input item status value"
-                                    onChange={e => setData('status', e.target.value)}
-                                    value={data.status}
-                                    /> */}
-                                    {/*name="name" v-model="item.name"*/}
 
-                                <CLStatusList list={statuses} value={data.status} setdata={setData} field="status" />
+                                <CLStatusList
+                                    list={statuses}
+                                    value={data.status}
+                                    setdata={setData}
+                                    field="status"
+                                    defaultValue='tpl'
+                                    />
                             </div>
                             { errors.status && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.status || 'empty!'}</p> }
                         </div>
