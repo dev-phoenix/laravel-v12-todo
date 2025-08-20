@@ -77,6 +77,8 @@ class TodoController extends Controller
         $todo->update([
             'completed' => $request->completed,
         ]);
+        // print_r($todo);
+        // return $todo;
     }
 
     public function updateCompletion(Request $request, Todo $todo)

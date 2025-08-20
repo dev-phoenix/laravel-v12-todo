@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Todo::factory(10)->create();
-        Item::factory(10)->create();
+        // Todo::factory(10)->create();
+        // Item::factory(10)->create();
     }
 }

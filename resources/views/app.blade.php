@@ -23,10 +23,22 @@
         <style>
             html {
                 background-color: oklch(1 0 0);
+                overflow: auto !important; /* This would prevent Headless UI from setting hidden */
+                padding-right: 0 !important;
             }
 
             html.dark {
                 background-color: oklch(0.145 0 0);
+            }
+            ::backdrop {
+                background-image: linear-gradient(
+                    45deg,
+                    magenta,
+                    rebeccapurple,
+                    dodgerblue,
+                    green
+                );
+                opacity: 0.25;
             }
         </style>
 
