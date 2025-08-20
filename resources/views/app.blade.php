@@ -23,6 +23,8 @@
         <style>
             html {
                 background-color: oklch(1 0 0);
+                overflow: auto !important; /* This would prevent Headless UI from setting hidden */
+                padding-right: 0 !important;
             }
 
             html.dark {

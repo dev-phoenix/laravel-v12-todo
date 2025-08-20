@@ -57,8 +57,10 @@ class CoverLetterController extends Controller
         $request->validate([
             'url' => ['required'],
             'chat' => ['required'],
+            // 'hide' => ['required'],
             'company' => ['required'],
             'contact_name' => ['required'],
+            // 'stage' => ['required'],
             'status' => ['required'],
             'title' => ['required'],
             'info' => ['required'],
@@ -68,16 +70,19 @@ class CoverLetterController extends Controller
             'chat.required' => 'chat is required!',
             'company.required' => 'company is required!',
             'contact_name.required' => 'contact name is required!',
+            'stage.required' => 'stage is required!',
             'status.required' => 'status is required!',
             'title.required' => 'title is required!',
             'info.required' => 'info is required!',
             'content.required' => 'content is required!',
         ]);
         $data = [
+            'hide' => $request->hide,
             'url' => $request->url,
             'chat' => $request->chat,
             'company' => $request->company,
             'contact_name' => $request->contact_name,
+            'stage' => $request->stage,
             'status' => $request->status,
             'title' => $request->title,
             'info' => $request->info,
@@ -108,7 +113,9 @@ class CoverLetterController extends Controller
     public function update(Request $request, CoverLetter $coverLetter)
     {
         $data = $this->prepare_data($request);
+        // print_r($data);
         $coverLetter->update($data);
+        // return $data;
     }
 
     /**
@@ -118,6 +125,19 @@ class CoverLetterController extends Controller
     {
         $data = $this->prepare_data($request);
         $data = array_filter($data, function ($k) { return $k == 'status'; }, ARRAY_FILTER_USE_KEY );
+        $coverLetter->update($data);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function hide(Request $request, CoverLetter $coverLetter)
+    {
+        $request->validate(
+            [ 'hide' => ['required'], ],
+            [ 'hide.required' => 'hide is required!', ]
+        );
+        $data = [ 'hide' => $request->hide, ];
         $coverLetter->update($data);
     }
 
