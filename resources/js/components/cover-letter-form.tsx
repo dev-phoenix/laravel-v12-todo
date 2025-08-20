@@ -242,7 +242,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                             <>
                     <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item ID</label>
+                            <label htmlFor="item-id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID</label>
                             <input type="number" id="item-id" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -296,7 +296,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
 
                     <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item url</label>
+                            <label htmlFor="item-url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vacancy url</label>
                             <input type="text" id="item-url" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -311,7 +311,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     </div>
                     <div className="----w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-chat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item chat</label>
+                            <label htmlFor="item-chat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chat url</label>
                             <input type="text" id="item-chat" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -326,7 +326,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     </div>
                     <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-company" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item company</label>
+                            <label htmlFor="item-company" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company url</label>
                             <input type="text" id="item-company" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -341,7 +341,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     </div>
                     <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-contact_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item contact name</label>
+                            <label htmlFor="item-contact_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact name</label>
                             <input type="text" id="item-contact_name" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -364,7 +364,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
 
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
-                                <label htmlFor="item-stage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item stage</label>
+                                <label htmlFor="item-stage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stage</label>
                                 <CLStatusList
                                     list={stages}
                                     value={data.stage}
@@ -377,7 +377,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                         </div>
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
-                                <label htmlFor="item-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item status</label>
+                                <label htmlFor="item-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
 
                                 <CLStatusList
                                     list={statuses}
@@ -391,7 +391,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                         </div>
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
-                                <label htmlFor="item-hide" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item hide</label>
+                                <label htmlFor="item-hide" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hide</label>
 
                                 <label className="inline-flex items-center --mb-5 cursor-pointer p-2.5">
                                     <input type="checkbox" id="item-hide"
@@ -427,7 +427,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
 
                     <div className="max-w-xl --grow-3 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item title</label>
+                            <label htmlFor="item-title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
                             <input type="text" id="item-title" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -445,7 +445,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                 <div className="----w-1/2 w-[calc(100%/2-var(--spacing)*4)]">
                     <div className="max-w-xl --grow-3 --shrink-0 --w-full/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item info</label>
+                            <label htmlFor="item-info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Info</label>
                             <textarea id="item-info" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -460,7 +460,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     </div>
                     <div className="max-w-xl --grow-3 --shrink-0 --w-full/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-content" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item content</label>
+                            <label htmlFor="item-content" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Content</label>
                             <textarea id="item-content" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
