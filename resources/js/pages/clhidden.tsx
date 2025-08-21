@@ -42,14 +42,13 @@ interface CoverLetter {
 
 interface PageProps {
     letters: CoverLetter[],
-    title: string,
     laraVersion: string,
     phpVersion: string,
 }
 
-export default function Welcome() {
+export default function CLHidden() {
     const { auth } = usePage<SharedData>().props;
-    const { letters, title,
+    const { letters,
         laraVersion, phpVersion }: PageProps = usePage().props as PageProps;
     // console.log('letters', letters);
 
@@ -62,7 +61,7 @@ export default function Welcome() {
                     <NavMainTop />
                     <div id="-app" className=" mt-4 text-gray-500 todo-container mb-4">
                         {/* <TodoBlock incompleteTodos={incompleteTodos} completeTodos={completeTodos}/> */}
-                        <CoverLetterBlock letters={letters} title={title} />
+                        <CoverLetterBlock letters={letters} title="Hidden Cover Letters"/>
                     </div>
                     <div className="flex justify-center mt-4 mb-4 sm:items-center sm:justify-between">
                         <div className="text-center text-sm text-gray-500 sm:text-left">

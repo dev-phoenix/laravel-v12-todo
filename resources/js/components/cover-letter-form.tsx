@@ -1,5 +1,5 @@
 // r esources/js/components/NewPage.jsx
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -8,12 +8,14 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { useForm } from '@inertiajs/react';
-import { Dict, Stages, StatusColor, Statuses, StatusTextColor } from './todo/cl-helper';
+import { Dict, getColorStatus, getColorText,
+    Stages, StatusColor, Statuses, StatusTextColor } from './todo/cl-helper';
 import TWSelectMenu from './todo/cl-select';
 
 import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/16/solid'
 import { CheckIcon } from '@heroicons/react/20/solid'
+import { cn } from '@/lib/utils';
 
 library.add(fas, far, fab)
 
@@ -49,23 +51,6 @@ let statusColor = StatusColor
 let statusTextColor = StatusTextColor
 let somedict: Dict = {}
 
-function getNextStatus(status: any, list: null|string[] = statuses) {
-    if(!list) list = statuses
-    let pos = list.indexOf(status)
-    if(pos == -1) return list[0]
-    pos += 1
-    if(pos >= list.length) pos = 0
-    return list[pos]
-}
-function getColorStatus(status:string) {
-    if(!(status in statusColor)) status = 'tpl'
-    return statusColor[status]
-}
-function getColorText(color:string) {
-    if(!(color in statusTextColor)) color = 'tpl'
-    return statusTextColor[color]
-}
-
 
 function formatDate(date:string) {
     let dt = new Date(date)
@@ -96,8 +81,9 @@ function StatusIcon({status}:any){
     )
 }
 
-function CLStatusList({list, value='tpl', setdata, field}: any) {
+function CLStatusList({list, value='tpl', setdata, field, defaultValue='tpl'}: any) {
     // const [selected, setSelected] = useState(value)
+    if(value == '') value = defaultValue;
 
     let selected = value
     console.log('CLStatusList', field, value, selected)
@@ -159,6 +145,46 @@ function CLStatusList({list, value='tpl', setdata, field}: any) {
     )
 }
 
+function InputText({field, type='text', data, setData, errors, valueHendler=false, title='',
+    required=false, readonly=false,  placeholder="", classname="", classWrapp=""}) {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if(!setData) return
+        setData(field, e.target.value)
+    }
+    let id="item-" + field
+    classWrapp = cn("--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]",
+        classWrapp
+    )
+    let className = cn("shadow-xs bg-gray-50 border border-gray-300\
+                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5\
+                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white\
+                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light",
+                    classname
+                )
+    let value = data[field]
+    if(valueHendler) value = valueHendler(value)
+
+    return (
+
+        <div className={classWrapp}>
+            <div className="mb-5">
+                <label htmlFor={id}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >{title}</label>
+                <input type={type} id={id} className={className}
+                    required={required}
+                    readOnly={readonly}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    value={value}
+                    />
+                    {/*name="name" v-model="item.name"*/}
+            </div>
+            { errors && errors[field] && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors[field] || 'empty!'}</p> }
+        </div>
+    )
+}
+
 export function CoverLetterForm({item, select, close, formHandler}: any) { //:CoverLetter|null
 
     // if(item === null) {
@@ -180,6 +206,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
         data, setData, post, patch, errors, reset
     } = useForm(item);
     formHandler['setData'] = setData
+    formHandler['formData'] = data
     console.log('CoverLetterForm', item, data)
 
     const sendLetter = (e) => {
@@ -193,7 +220,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
         } else {
             addLetter(e)
         }
-        select(data)
+        // select(data)
     }
 
     const addLetter = (e) => {
@@ -210,8 +237,10 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
         patch(route('coverletters.update', data), {
             preserveScroll: true,
             onSuccess: () => {
+                formHandler['setDataItem'](data)
                 close()
-                reset()},
+                reset()
+            },
         })
     }
 
@@ -236,120 +265,64 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     {data.id &&
                         (
                             <>
-                    <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                        <div className="mb-5">
-                            <label htmlFor="item-id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item ID</label>
-                            <input type="number" id="item-id" className="shadow-xs bg-gray-50 border border-gray-300
-                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                placeholder="Input item id value"
-                                // onChange={e => setData('url', e.target.value)}
-                                value={data.id}
-                                readOnly
-                                />
-                                {/*name="name" v-model="item.name"*/}
-                        </div>
-                        {/* { errors.url && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.url || 'empty!'}</p> } */}
-                    </div>
-                    <div className="w-full flex gap-4 justify-between">
-                        <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                            <div className="mb-5">
-                                <label htmlFor="item-created_at" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Created at</label>
-                                <input type="text" id="item-created_at" className="shadow-xs bg-gray-50 border border-gray-300
-                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                    placeholder="Input item id value"
-                                    // onChange={e => setData('url', e.target.value)}
-                                    value={formatDate(data.created_at)}
-                                    readOnly
+                                <InputText
+                                    field="id"
+                                    title='ID' placeholder="ID value"
+                                    classname="" type="text"
+                                    required={false} readonly={true}
+                                    data={data} setData={false} errors={false}
                                     />
-                                    {/*name="name" v-model="item.name"*/}
-                            </div>
-                            {/* { errors.url && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.url || 'empty!'}</p> } */}
-                        </div>
-                        <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                            <div className="mb-5">
-                                <label htmlFor="item-updated_at" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Updated at</label>
-                                <input type="text" id="item-updated_at" className="shadow-xs bg-gray-50 border border-gray-300
-                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                    placeholder="Input item id value"
-                                    // onChange={e => setData('url', e.target.value)}
-                                    value={formatDate(data.updated_at)}
-                                    readOnly
-                                    />
-                                    {/*name="name" v-model="item.name"*/}
-                            </div>
-                            {/* { errors.url && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.url || 'empty!'}</p> } */}
-                        </div>
-                    </div>
+
+                                <div className="w-full flex gap-4 justify-between">
+                                    <InputText
+                                        field="created_at"
+                                        title='Created at' placeholder="Created value"
+                                        classWrapp="w-full" classname="" type="text"
+                                        required={true} readonly={true}
+                                        data={data} setData={false} errors={false} valueHendler={formatDate}
+                                        />
+                                    <InputText
+                                        field="updated_at"
+                                        title='Updated at' placeholder="Updated value"
+                                        classWrapp="w-full" classname="" type="text"
+                                        required={true} readonly={true}
+                                        data={data} setData={false} errors={false} valueHendler={formatDate}
+                                        />
+                                </div>
                             </>
                         )
                     }
+                    <InputText
+                        field="url"
+                        title='Vacancy url' placeholder="Fill vacancy URL"
+                        classname="" type="text"
+                        required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
 
-                    <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                        <div className="mb-5">
-                            <label htmlFor="item-url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item url</label>
-                            <input type="text" id="item-url" className="shadow-xs bg-gray-50 border border-gray-300
-                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                placeholder="Input item url value"
-                                onChange={e => setData('url', e.target.value)}
-                                value={data.url}
-                                />
-                                {/*name="name" v-model="item.name"*/}
-                        </div>
-                        { errors.url && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.url || 'empty!'}</p> }
-                    </div>
-                    <div className="----w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                        <div className="mb-5">
-                            <label htmlFor="item-chat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item chat</label>
-                            <input type="text" id="item-chat" className="shadow-xs bg-gray-50 border border-gray-300
-                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                placeholder="Input item chat value"
-                                onChange={e => setData('chat', e.target.value)}
-                                value={data.chat}
-                                />
-                                {/*name="name" v-model="item.name"*/}
-                        </div>
-                        { errors.chat && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.chat || 'empty!'}</p> }
-                    </div>
-                    <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                        <div className="mb-5">
-                            <label htmlFor="item-company" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item company</label>
-                            <input type="text" id="item-company" className="shadow-xs bg-gray-50 border border-gray-300
-                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                placeholder="Input item company value"
-                                onChange={e => setData('company', e.target.value)}
-                                value={data.company}
-                                />
-                                {/*name="name" v-model="item.name"*/}
-                        </div>
-                        { errors.company && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.company || 'empty!'}</p> }
-                    </div>
-                    <div className="--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
-                        <div className="mb-5">
-                            <label htmlFor="item-contact_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item contact name</label>
-                            <input type="text" id="item-contact_name" className="shadow-xs bg-gray-50 border border-gray-300
-                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                placeholder="Input item name value"
-                                onChange={e => setData('contact_name', e.target.value)}
-                                value={data.contact_name}
-                                />
-                                {/*name="name" v-model="item.name"*/}
-                        </div>
-                        { errors.contact_name && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.contact_name || 'empty!'}</p> }
-                    </div>
+                    <InputText
+                        field="chat"
+                        title='Chat url' placeholder="Fill chat URL"
+                        classname="" type="text"
+                        // required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
+
+                    <InputText
+                        field="company"
+                        title='Company url' placeholder="Fill company URL"
+                        classname="" type="text"
+                        // required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
+
+                    <InputText
+                        field="contact_name"
+                        title='Contact name' placeholder="Fill contact name"
+                        classname="" type="text"
+                        // required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
 
                     {/* <div className="w-full flex gap-4 justify-between flex-col">
                         <TWSelectMenu />
@@ -360,40 +333,35 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
 
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
-                                <label htmlFor="item-stage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item stage</label>
-                                {/* <input type="text" id="item-stage" className="shadow-xs bg-gray-50 border border-gray-300
-                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                    placeholder="Input item stage value"
-                                    onChange={e => setData('stage', e.target.value)}
+                                <label htmlFor="item-stage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stage</label>
+                                <CLStatusList
+                                    list={stages}
                                     value={data.stage}
-                                    /> */}
-                                    {/*name="name" v-model="item.name"*/}
-                                <CLStatusList list={stages} value={data.stage} setdata={setData} field="stage" />
+                                    setdata={setData}
+                                    field="stage"
+                                    defaultValue='tpl'
+                                    />
                             </div>
                             { errors.stage && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.stage || 'empty!'}</p> }
                         </div>
+
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
-                                <label htmlFor="item-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item status</label>
-                                {/* <input type="text" id="item-status" className="shadow-xs bg-gray-50 border border-gray-300
-                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                    placeholder="Input item status value"
-                                    onChange={e => setData('status', e.target.value)}
+                                <label htmlFor="item-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                                <CLStatusList
+                                    list={statuses}
                                     value={data.status}
-                                    /> */}
-                                    {/*name="name" v-model="item.name"*/}
-
-                                <CLStatusList list={statuses} value={data.status} setdata={setData} field="status" />
+                                    setdata={setData}
+                                    field="status"
+                                    defaultValue='tpl'
+                                    />
                             </div>
                             { errors.status && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.status || 'empty!'}</p> }
                         </div>
+
                         <div className="w-full --w-1/2 --w-[calc(100%/2-var(--spacing)*4)]">
                             <div className="mb-5">
-                                <label htmlFor="item-hide" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item hide</label>
+                                <label htmlFor="item-hide" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hide</label>
 
                                 <label className="inline-flex items-center --mb-5 cursor-pointer p-2.5">
                                     <input type="checkbox" id="item-hide"
@@ -427,27 +395,19 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                         </div>
                     </div>
 
-                    <div className="max-w-xl --grow-3 --w-[calc(100%/2-var(--spacing)*4)]">
-                        <div className="mb-5">
-                            <label htmlFor="item-title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item title</label>
-                            <input type="text" id="item-title" className="shadow-xs bg-gray-50 border border-gray-300
-                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-                                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-                                placeholder="Input item title value"
-                                onChange={e => setData('title', e.target.value)}
-                                value={data.title}
-                                />
-                                {/*name="name" v-model="item.name"*/}
-                        </div>
-                        { errors.title && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.title || 'empty!'}</p> }
-                    </div>
+                    <InputText
+                        field="title"
+                        title='Title' placeholder="Fill title"
+                        classWrapp="max-w-xl" classname="" type="text"
+                        required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
                 </div>
 
                 <div className="----w-1/2 w-[calc(100%/2-var(--spacing)*4)]">
                     <div className="max-w-xl --grow-3 --shrink-0 --w-full/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item info</label>
+                            <label htmlFor="item-info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Info</label>
                             <textarea id="item-info" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -462,7 +422,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     </div>
                     <div className="max-w-xl --grow-3 --shrink-0 --w-full/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
-                            <label htmlFor="item-content" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item content</label>
+                            <label htmlFor="item-content" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Content</label>
                             <textarea id="item-content" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
