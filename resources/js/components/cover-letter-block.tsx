@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { CoverLetterForm } from "./cover-letter-form";
 import CoverLetterItem from "./cover-letter-item";
 import { CoverLetter } from "./todo/cl-helper";
+import { EyeIcon } from "@heroicons/react/20/solid";
 // import { CoverLetterItem } from "./cover-letter-item";
 
 // interface CoverLetter {
@@ -99,12 +100,12 @@ function CoverLetterBlock ({letters, title}: PageProps){
 
     const itemEmpty = {
         "hide" : false,
-        "url" : 'a',
-        "chat" : 'b',
-        "company" : 'c',
+        "url" : '',
+        "chat" : '',
+        "company" : '',
         "contact_name" : '',
-        "stage" : '',
-        "status" : '',
+        "stage" : 'tpl',
+        "status" : 'tpl',
         "title" : '',
         "info" : '',
         "content" : '',
@@ -138,8 +139,8 @@ function CoverLetterBlock ({letters, title}: PageProps){
                         <div className="flex gap-2">
 
                             <h2 id="todo-title">Cover Letter List </h2>
-                            <div className="shrnk-0">
-                                ( <a href="/cl-hidden" className="mx-1 underline">Hidden</a> )
+                            <div className="shrnk-0 flex">
+                                ( <a href="/cl-hidden" className="mx-1 underline"><EyeIcon aria-hidden="true" className="size-5" /></a> )
                             </div>
                         </div>
                             {/* <todo-form v-on:reloadlist="getList()"/> */}

@@ -28,6 +28,25 @@ let StatusColor: {[key:string]:string} = {
 let StatusTextColor: {[key:string]:string} = {'slate': 'gray', 'emerald': 'gray', 'fuchsia': 'gray',
     'sky': 'gray', 'lime': 'gray', 'pink': 'gray', 'zinc': 'gray'}
 
+
+
+function getNextStatus(status: any, list: null|string[] = Statuses) {
+    if(!list) list = Statuses
+    let pos = list.indexOf(status)
+    if(pos == -1) return list[0]
+    pos += 1
+    if(pos >= list.length) pos = 0
+    return list[pos]
+}
+function getColorStatus(status:string) {
+    if(!(status in StatusColor)) status = 'tpl'
+    return StatusColor[status]
+}
+function getColorText(color:string) {
+    if(!(color in StatusTextColor)) color = 'tpl'
+    return StatusTextColor[color]
+}
+
 export type {
     CoverLetter,
     Dict
@@ -36,6 +55,9 @@ export {
     Stages,
     Statuses,
     StatusColor,
-    StatusTextColor
+    StatusTextColor,
+    getNextStatus,
+    getColorStatus,
+    getColorText,
 }
 
