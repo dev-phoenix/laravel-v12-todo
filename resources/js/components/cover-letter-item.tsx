@@ -54,7 +54,7 @@ function classGenerator() {
     return cls.join(' ')
 }
 
-export function Shield({status='tpl'}) {
+export function Shield({status='tpl', onClick=false}) {
     if(!status) status = 'tpl'
     let bg = getColorStatus(status)
     let color = getColorText(bg)
@@ -66,7 +66,7 @@ export function Shield({status='tpl'}) {
         {/* <div className="flex items-center --p-4 --mb-4 text-sm ml-4 px-2 py-1 border border-pink-800 rounded-lg bg-pink-500 dark:bg-pink-500 text-blue-400 dark:border-pink-800">
                 {status} {bg} {color}
         </div> */}
-        <div className={cl}>
+        <div className={cl} onClick={onClick}>
                 {status}
         </div>
         </>
@@ -163,11 +163,29 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
         let stat = getNextStatus(data.status)
         setData(dt=>({...dt,'status': stat}))
         let dt = {...data, 'status': stat}
-        console.log('%c setNextStatus dt', 'font-size:16px;color:red;', dt)
-        console.log('%c setNextStatus data', 'font-size:16px;color:red;', data)
+        // console.log('%c setNextStatus dt', 'font-size:16px;color:red;', dt)
+        // console.log('%c setNextStatus data', 'font-size:16px;color:red;', data)
         let ch = false
         if(stat == 'offer' || stat == 'completed')  ch = true
             setIsChecked(ch)
+        // setTimeout(()=>{patch(route('letters.complete', dt))}, 500)
+        // setTimeout(()=>{patch(route('letters.complete', dt))}, 1500)
+        router.patch('coverletters/complete/' + dt.id, dt)
+
+        // if(formRef.current) formRef.current.submit()
+    }
+
+    const setNextStage = (ev: MouseEvent<HTMLInputElement>) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        let stat = getNextStatus(data.stage, stages)
+        setData(dt=>({...dt,'stage': stat}))
+        let dt = {...data, 'stage': stat}
+        // console.log('%c setNextStatus dt', 'font-size:16px;color:red;', dt)
+        // console.log('%c setNextStatus data', 'font-size:16px;color:red;', data)
+        let ch = false
+        // if(stat == 'offer' || stat == 'completed')  ch = true
+        //     setIsChecked(ch)
         // setTimeout(()=>{patch(route('letters.complete', dt))}, 500)
         // setTimeout(()=>{patch(route('letters.complete', dt))}, 1500)
         router.patch('coverletters/complete/' + dt.id, dt)
@@ -260,8 +278,10 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
             <div className="grow-0 flex items-start justify-center gap-0">
                 {/* <div className={classGenerator()} ></div> */}
                 {/* <div className={classGenerator()} ></div> */}
-                <Shield status={data.status} />
-                <Shield status={data.stage} />
+                <Shield status={data.status}
+                        onClick={setNextStatus} />
+                <Shield status={data.stage}
+                        onClick={setNextStage} />
                 <button type="submit" className=" ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4
                 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-1 text-center
                 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800

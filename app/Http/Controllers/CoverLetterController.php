@@ -139,7 +139,7 @@ class CoverLetterController extends Controller
     public function complete(Request $request, CoverLetter $coverLetter)
     {
         $data = $this->prepare_data($request);
-        $data = array_filter($data, function ($k) { return $k == 'status'; }, ARRAY_FILTER_USE_KEY );
+        $data = array_filter($data, function ($k) { return $k == 'status' || $k == 'stage'; }, ARRAY_FILTER_USE_KEY );
         $coverLetter->update($data);
     }
 
