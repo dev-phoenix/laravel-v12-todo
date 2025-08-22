@@ -67,10 +67,10 @@ export default function Welcome() {
                     <div className="flex justify-center mt-4 mb-4 sm:items-center sm:justify-between">
                         <div className="text-center text-sm text-gray-500 sm:text-left">
                             <div className="flex items-center">{/* --stroke="currentColor" */}
-                                <svg fill="none"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                                <svg fill="none" viewBox="0 0 24 24"
 
                                     className="--ml-4 -mt-px w-5 h-5 text-fuchsia-500 stroke-fuchsia-500 stroke-fuchsia-500">
-                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
 
                             </div>
@@ -83,13 +83,15 @@ export default function Welcome() {
                 </div>
 
                 <div className="flex w-full items-start justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <main className="h-[200px] flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
+                    <main className="h-[400px] lg:h-[200px] flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
                         <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-10 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                            <h1 className="mb-1 font-medium">Laravel v12 Todo list</h1>
+                            <h1 className="mb-1 font-medium">Laravel v12 Cover Letter list</h1>
                             <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
                                 Laravel 12, Tailwindcss 4, React.js 19,
                                 <br />
-                                MySQL, Fontawesome icons.
+                                MySQL, Fontawesome icons,
+                                <br />
+                                Headlessui, Heroicons.
                             </p>
                             <ul className="flex gap-3 text-sm leading-normal">
                                 {/* <li>

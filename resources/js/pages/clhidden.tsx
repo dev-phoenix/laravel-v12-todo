@@ -66,10 +66,10 @@ export default function CLHidden() {
                     <div className="flex justify-center mt-4 mb-4 sm:items-center sm:justify-between">
                         <div className="text-center text-sm text-gray-500 sm:text-left">
                             <div className="flex items-center">{/* --stroke="currentColor" */}
-                                <svg fill="none"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                                <svg fill="none" viewBox="0 0 24 24"
 
                                     className="--ml-4 -mt-px w-5 h-5 text-fuchsia-500 stroke-fuchsia-500 stroke-fuchsia-500">
-                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
 
                             </div>
@@ -88,7 +88,9 @@ export default function CLHidden() {
                             <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
                                 Laravel 12, Tailwindcss 4, React.js 19,
                                 <br />
-                                MySQL, Fontawesome icons.
+                                MySQL, Fontawesome icons,
+                                <br />
+                                Headlessui, Heroicons.
                             </p>
                             <ul className="flex gap-3 text-sm leading-normal">
                                 {/* <li>

@@ -11,7 +11,10 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { router, useForm } from '@inertiajs/react';
 import { CoverLetter, Dict, Stages, StatusColor, Statuses, StatusTextColor } from './todo/cl-helper';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid';
+import { EyeIcon, EyeSlashIcon, XMarkIcon,
+    ArrowTopRightOnSquareIcon, ChatBubbleBottomCenterTextIcon, LinkIcon
+} from '@heroicons/react/20/solid';
+import { cn } from '@/lib/utils';
 // import { Shield } from 'lucide-react';
 
 library.add(fas, far, fab)
@@ -95,12 +98,12 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
 
     const formRef = useRef(null)
     // console.log('CoverLetterItem', item.id, isChecked);
-    console.log(`%c CoverLetterItem %c${item.id} ${item.stage} %c${item.status}`,
-        'font-size:16px;color:aqua;',
-        'font-size:16px;color:yellow;',
-        'font-size:16px;color:#50c878;',
-        // data.stage, data.status
-    )
+    // console.log(`%c CoverLetterItem %c${item.id} ${item.stage} %c${item.status}`,
+    //     'font-size:16px;color:aqua;',
+    //     'font-size:16px;color:yellow;',
+    //     'font-size:16px;color:#50c878;',
+    //     // data.stage, data.status
+    // )
 
     if(item.id == 8){
 
@@ -163,6 +166,7 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
         let stat = getNextStatus(data.status)
         setData(dt=>({...dt,'status': stat}))
         let dt = {...data, 'status': stat}
+        if(!dt['stage']) dt['stage'] = 'tpl'
         // console.log('%c setNextStatus dt', 'font-size:16px;color:red;', dt)
         // console.log('%c setNextStatus data', 'font-size:16px;color:red;', data)
         let ch = false
@@ -170,7 +174,7 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
             setIsChecked(ch)
         // setTimeout(()=>{patch(route('letters.complete', dt))}, 500)
         // setTimeout(()=>{patch(route('letters.complete', dt))}, 1500)
-        router.patch('coverletters/complete/' + dt.id, dt)
+        router.patch('coverletters/complete/' + dt.id, dt, {preserveScroll: true})
 
         // if(formRef.current) formRef.current.submit()
     }
@@ -181,6 +185,7 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
         let stat = getNextStatus(data.stage, stages)
         setData(dt=>({...dt,'stage': stat}))
         let dt = {...data, 'stage': stat}
+        if(!dt['status']) dt['status'] = 'tpl'
         // console.log('%c setNextStatus dt', 'font-size:16px;color:red;', dt)
         // console.log('%c setNextStatus data', 'font-size:16px;color:red;', data)
         let ch = false
@@ -188,7 +193,7 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
         //     setIsChecked(ch)
         // setTimeout(()=>{patch(route('letters.complete', dt))}, 500)
         // setTimeout(()=>{patch(route('letters.complete', dt))}, 1500)
-        router.patch('coverletters/complete/' + dt.id, dt)
+        router.patch('coverletters/complete/' + dt.id, dt, {preserveScroll: true})
 
         // if(formRef.current) formRef.current.submit()
     }
@@ -207,6 +212,9 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
         ev.stopPropagation();
         patch(route('letters.hide', data))
     }
+
+    const cliPrev = (e) => {e.preventDefault();e.stopPropagation()}
+    const cliStop = (e) => {e.stopPropagation()}
 
     // console.log('TodoListItem item', item);
     // console.log('CoverLetterItem 2', item);
@@ -270,29 +278,67 @@ export default function CoverLetterItem({item, select, formHandler}: CLItem){
                             (item.status == 'completed' ? 'completed line-through text-gray-500' : 'text-gray-300')
                         ].join(' ')}
                         // :class="[item.completed ? 'completed text-gray-500' : 'text-gray-300', '']"
-                        onClick={setNextStatus}
+                        // onClick={setNextStatus}
                     > { item.title } {/* data.stage } { data.status */}</span>
             </form>
             {/* <!-- input type="checkbox" @change="updateCheck()" v-model="item.completed" className="" --> */}
 
-            <div className="grow-0 flex items-start justify-center gap-0">
+            <div className="grow-0 flex flex-col lg:flex-row items-center lg:items-start
+                justify-center lg:gap-0 gap-1">
                 {/* <div className={classGenerator()} ></div> */}
                 {/* <div className={classGenerator()} ></div> */}
-                <Shield status={data.status}
-                        onClick={setNextStatus} />
-                <Shield status={data.stage}
-                        onClick={setNextStage} />
-                <button type="submit" className=" ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4
-                focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-1 text-center
-                dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
-                        cursor-pointer"
-                // @click="removeItem()"
-                    // onClick={deleteTodo}
-                    onClick={hideCL}
-                >
-                    {/* <FontAwesomeIcon icon="fa-solid fa-eye-slash" /> */}
-                    {data.hide?<EyeIcon aria-hidden="true" className="size-5" />:<EyeSlashIcon aria-hidden="true" className="size-5" />}
-                </button>
+
+                <div className="grow-0 flex items-start justify-center gap-0">
+                    <Shield status={data.status}
+                            onClick={setNextStatus} />
+                    <Shield status={data.stage}
+                            onClick={setNextStage} />
+                </div>
+
+                <div className="grow-0 flex items-start justify-center gap-0">
+                    <a href={data.url} onClick={data.url.length < 5? cliPrev : cliStop}
+                        className="relative ml-4 px-2 py-1 rounded-lg border border-fuchsia-500" target="_blank">
+                            <LinkIcon aria-hidden="true" className={cn("size-5", data.url.length > 5 ? "text-slate-50" : "")} />
+                        {data.url.length<5?<XMarkIcon aria-hidden="true"
+                        className="absolute size-5 top-[50%] left-[50%] translate-[-50%] text-slate-50"
+                        style={{
+                            textShadow: "0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.4)",
+                            filter: "drop-shadow(0px 0px 5px rgb(0, 0, 0))",
+                            }}/>:''}</a>
+                    <a href={data.chat} onClick={data.chat.length < 5? cliPrev : cliStop}
+                        className="relative ml-2 px-2 py-1 rounded-lg border border-fuchsia-500" target="_blank">
+                        <ChatBubbleBottomCenterTextIcon aria-hidden="true" className={cn("size-5", data.chat.length > 5 ? "text-slate-50" : "")} />
+                        {data.chat.length<5?<XMarkIcon aria-hidden="true"
+                        className="absolute size-5 top-[50%] left-[50%] translate-[-50%] text-slate-50"
+                        style={{
+                            textShadow: "0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.4)",
+                            filter: "drop-shadow(0px 0px 5px rgb(0, 0, 0))",
+                            }}/>:''}
+                    </a>
+                    <a href={data.company} onClick={data.company.length < 5? cliPrev : cliStop}
+                        className="relative ml-2 px-2 py-1 rounded-lg border border-fuchsia-500" target="_blank">
+                            <ArrowTopRightOnSquareIcon aria-hidden="true" className={cn("size-5", data.company.length > 5 ? "text-slate-50" : "")} />
+                        {data.company.length<5?<XMarkIcon aria-hidden="true"
+                        className="absolute size-5 top-[50%] left-[50%] translate-[-50%] text-slate-50"
+                        style={{
+                            textShadow: "0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.4)",
+                            filter: "drop-shadow(0px 0px 5px rgb(0, 0, 0))",
+                            }}/>:''}</a>
+                </div>
+
+                <div className="grow-0 flex items-start justify-center gap-0">
+                    <button type="submit" className=" ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4
+                    focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-1 text-center
+                    dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
+                            cursor-pointer"
+                    // @click="removeItem()"
+                        // onClick={deleteTodo}
+                        onClick={hideCL}
+                    >
+                        {/* <FontAwesomeIcon icon="fa-solid fa-eye-slash" /> */}
+                        {data.hide?<EyeIcon aria-hidden="true" className="size-5" />:<EyeSlashIcon aria-hidden="true" className="size-5" />}
+                    </button>
+                </div>
             </div>
         </div>
     )

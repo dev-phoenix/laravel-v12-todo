@@ -1,5 +1,5 @@
 // r esources/js/components/NewPage.jsx
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -64,7 +64,7 @@ function formatDate(date:string) {
 }
 
 function StatusIcon({status}:any){
-    console.log('StatusIcon status', status)
+    // console.log('StatusIcon status', status)
     let bg = getColorStatus(status)
     let color = getColorText(bg)
     let cl = ["--hidden size-5 flex items-center text-sm ml-4 px-2 py-1 ",
@@ -86,7 +86,7 @@ function CLStatusList({list, value='tpl', setdata, field, defaultValue='tpl'}: a
     if(value == '') value = defaultValue;
 
     let selected = value
-    console.log('CLStatusList', field, value, selected)
+    // console.log('CLStatusList', field, value, selected)
 
     return (
 
@@ -146,7 +146,7 @@ function CLStatusList({list, value='tpl', setdata, field, defaultValue='tpl'}: a
 }
 
 function InputText({field, type='text', data, setData, errors, valueHendler=false, title='',
-    required=false, readonly=false,  placeholder="", classname="", classWrapp=""}) {
+    required=false, readonly=false,  placeholder="", classname="", classWrapp="", ...props}) {
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         if(!setData) return
         setData(field, e.target.value)
@@ -176,7 +176,7 @@ function InputText({field, type='text', data, setData, errors, valueHendler=fals
                     readOnly={readonly}
                     placeholder={placeholder}
                     onChange={onChange}
-                    value={value}
+                    value={value} {...props}
                     />
                     {/*name="name" v-model="item.name"*/}
             </div>
@@ -185,7 +185,12 @@ function InputText({field, type='text', data, setData, errors, valueHendler=fals
     )
 }
 
-export function CoverLetterForm({item, select, close, formHandler}: any) { //:CoverLetter|null
+/** LogText console log text formatting */
+const lt = (color='aqua', size=16) => {
+    return `color:${color};font-size:${size}px;`
+}
+
+export function CoverLetterForm({item, select, close, formHandler, dialogstate}: any) { //:CoverLetter|null
 
     // if(item === null) {
     //     item = {
@@ -207,12 +212,23 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
     } = useForm(item);
     formHandler['setData'] = setData
     formHandler['formData'] = data
-    console.log('CoverLetterForm', item, data)
+    // console.log('CoverLetterForm', item, data)
+
+    const infoInputRef = useRef(null)
+
+    useEffect(() =>{
+        if(dialogstate && infoInputRef.current) {
+            // console.log('%c useEffect dialogstate', lt(), infoInputRef.current)
+            infoInputRef.current.focus()
+            setTimeout(() => {infoInputRef.current.focus()},100)
+            setTimeout(() => {infoInputRef.current.blur()},100)
+        }
+    },[dialogstate])
 
     const sendLetter = (e) => {
-        console.log('sendLetter e', e);
-        console.log('sendLetter item', item);
-        console.log('sendLetter data', data);
+        // console.log('sendLetter e', e);
+        // console.log('sendLetter item', item);
+        // console.log('sendLetter data', data);
         e.preventDefault();
 
         if(data.id){
@@ -257,10 +273,13 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
     return (
         <>
             <div className="w-full">
-                <form className=" --mx-auto --w-full --w-[calc(100%-(var(--spacing)*8*2))] ml-8 mr-8 mx-8 relative flex flex-wrap --flex-col justify-between gap-4"
+                <form className=" --mx-auto --w-full --w-[calc(100%-(var(--spacing)*8*2))]
+                    ml-8 mr-8 mx-8 relative flex flex-wrap flex-col-reverse lg:flex-row justify-between gap-4"
                 onSubmit={sendLetter}
                 >
-                <div className="----w-1/2 w-[calc(100%/2-var(--spacing)*4)]">
+
+                <div className="----w-1/2 lg:w-[calc(100%/2-var(--spacing)*4)]">
+                {/* attributes block */}
 
                     {data.id &&
                         (
@@ -404,17 +423,18 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                         />
                 </div>
 
-                <div className="----w-1/2 w-[calc(100%/2-var(--spacing)*4)]">
+                <div className="----w-1/2 lg:w-[calc(100%/2-var(--spacing)*4)]">
+                {/* texts block */}
                     <div className="max-w-xl --grow-3 --shrink-0 --w-full/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
                             <label htmlFor="item-info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Info</label>
-                            <textarea id="item-info" className="shadow-xs bg-gray-50 border border-gray-300
+                            <textarea ref={infoInputRef} id="item-info" className="shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                                 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                 placeholder="Input item info value"
                                 onChange={e => setData('info', e.target.value)}
-                                rows={5}
+                                rows={8} autoFocus={true} data-test="ok"
                                 value={data.info} />
                                 {/*name="name" v-model="item.name"*/}
                         </div>
@@ -437,7 +457,7 @@ export function CoverLetterForm({item, select, close, formHandler}: any) { //:Co
                     </div>
                 </div>
 
-                    <div className="w-1 grow-3 flex flex-start items-start">
+                    <div className="w-full grow-3 flex flex-start items-start">
                         <button type="submit" className=" mt-7 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
                             focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center
                             dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800

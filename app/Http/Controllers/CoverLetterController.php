@@ -78,7 +78,7 @@ class CoverLetterController extends Controller
             // 'stage' => ['required'],
             'status' => ['required'],
             'title' => ['required'],
-            'info' => ['required'],
+            // 'info' => ['required'],
             'content' => ['required'],
         ], [
             'url.required' => 'url is required!',
