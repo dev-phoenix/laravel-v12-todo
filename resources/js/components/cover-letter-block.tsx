@@ -40,6 +40,8 @@ interface DialogArgs {
 
 function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
     const dialogRef = useRef(null);
+    const [mouseDown, setMouseDown] = useState();
+    const [mouseUp, setMouseUp] = useState();
 
     useEffect(() => {
         if (isOpen) {
@@ -54,19 +56,41 @@ function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
     }
 
     const dialogClick = (ev) => {
+        if(mouseDown != mouseUp) return;
+        // console.log('dialogClick')
         if(ev.target === dialogRef.current) {
             onClose()
         }
         // console.log('dialg click:', ev.target === dialogRef.current, ev.target, dialogRef.current)
     }
 
+    const mouseDownEvent = (e) => {
+        console.log('mouseDownEvent', e.target)
+        setMouseDown(e.target)
+    }
+
+    const mouseUpEvent = (e) => {
+        console.log('mouseUpEvent', e.target)
+        setMouseUp(e.target)
+    }
+
     return (
     <dialog ref={dialogRef}
         // onClose={onClose}
         onClick={dialogClick}
-        className="w-full m-auto max-w-6xl bg-[#FDFDFC] p-6 --text-[#1b1b18] text-gray-500 lg:justify-center lg:p-8 dark:bg-[#0a0a0a]"
+        onMouseDown={mouseDownEvent}
+        onMouseUp={mouseUpEvent}
+        className="light w-full m-auto max-w-6xl p-6 lg:justify-center lg:p-8 bg-transparen
+            bg-[#FDFDFC] text-gray-500 dark:bg-[#0a0a0a]
+            rounded-[calc(theme(borderRadius.lg)-1px)]
+            rounded-[calc(var(--radius-lg)+var(--spacing)*3)]
+            --lg:rounded-[calc(var(--radius-lg)+var(--spacing)*8)]
+            lg:rounded-[calc(theme(borderRadius-lg)+var(--spacing)*4)]
+            "
         >
-        <div className="todo-list-container flex flex-col items-center border border-purple-700 w-full rounded-md pb-8 pt-8">
+        <div className="todo-list-container flex flex-col items-center border
+            border-purple-700 w-full rounded-md pb-8 pt-8
+            bg-[#FDFDFC] --text-[#1b1b18] text-gray-500 dark:bg-[#0a0a0a]">
             <div className="heading flex flex-col items-center w-full">
                 <h2 id="todo-title">Cover Letter</h2>
                 <div className="w-full">
@@ -96,6 +120,11 @@ function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
     );
 }
 
+/** LogText console log text formatting */
+const lt = (color='aqua', size=16) => {
+    return `color:${color};font-size:${size}px;`
+}
+
 function CoverLetterBlock ({letters, title}: PageProps){
 
     const itemEmpty = {
@@ -107,13 +136,28 @@ function CoverLetterBlock ({letters, title}: PageProps){
         "stage" : 'tpl',
         "status" : 'tpl',
         "title" : '',
-        "info" : '',
+        "info" : 'Info',
         "content" : '',
     }
-    console.log('%c letters', 'color: yellow');
-    console.table(letters);
+    // console.log('%c letters', 'color: yellow');
+    // console.table(letters);
     const [CLDialogOpen, setCLDialogOpen] = useState(false);
     const [clItem, setClItem] = useState(itemEmpty);
+
+    /** testin crash problem riced by headlessui */
+    /*
+    const [testLimit, setTestLimit] = useState(0);
+
+    const testLimitHendler = () => {
+        setTestLimit(n => {n++; return n;} )
+        console.log('%c testLimitHendler', lt(), testLimit)
+        setTimeout(() => {testLimitHendler()},100)
+    }
+    useEffect(() => {
+        console.log('%c useEffect testLimit', lt(), testLimit)
+        testLimitHendler()
+    }, [])
+    */
 
     const dialogFormOpen = () => {
         setCLDialogOpen(st=>!st);
@@ -124,8 +168,10 @@ function CoverLetterBlock ({letters, title}: PageProps){
         'setDataItem': (e?:any)=>{console.log('no catch set data')},
     }
 
+    // set current item on form data
     const selectItem = (clItem:any) => {
-        console.log('clItem', clItem)
+        if(!clItem['stage']) clItem['stage'] = 'tpl'
+        // console.log('clItem', clItem)
         // setClItem(clItem)
         formHandler['setData'](clItem)
         dialogFormOpen()
@@ -138,7 +184,7 @@ function CoverLetterBlock ({letters, title}: PageProps){
                     <div className="heading flex flex-col items-center w-full">
                         <div className="flex gap-2">
 
-                            <h2 id="todo-title">Cover Letter List </h2>
+                            <h2 id="todo-title">Cover Letter List{/* (ev: {testLimit})*/}</h2>
                             <div className="shrnk-0 flex">
                                 ( <a href="/cl-hidden" className="mx-1 underline"><EyeIcon aria-hidden="true" className="size-5" /></a> )
                             </div>
@@ -190,6 +236,7 @@ function CoverLetterBlock ({letters, title}: PageProps){
                             select={selectItem}
                             formHandler={formHandler}
                             close={dialogFormOpen}
+                            dialogstate={CLDialogOpen}
                         />}
                 />
         </>
