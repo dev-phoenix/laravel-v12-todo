@@ -186,6 +186,58 @@ function InputText({field, type='text', data, setData, errors, valueHendler=fals
     )
 }
 
+function InputCheckbox({field, data, setData, errors, valueHendler=false, title='', value=false,
+    required=false, readonly=false, classname="", classWrapp="",
+    change=null, ...props}) {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if(!setData) return
+        setData(field, e.target.checked)
+    }
+    let _onChange = change?change:onChange
+    let id="item-" + field
+    classWrapp = cn("--w-1/2 --w-[calc(100%/2-var(--spacing)*4)]",
+        classWrapp
+    )
+    let className = cn("shadow-xs bg-gray-50 border border-gray-300\
+                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5\
+                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white\
+                    dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light",
+                    classname
+                )
+    if(!value) value = data[field]
+    let checked = false
+    if(data) checked = data[field]
+    if(valueHendler) value = valueHendler(value)
+
+    return (<>
+        <div className={classWrapp}>
+            <div className="mb-5">
+                <label htmlFor={id}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >{title}</label>
+                <label className="inline-flex items-center --mb-5 cursor-pointer p-2.5">
+                    <input type="checkbox" id={id}
+                        // // @change="updateCheck()" v-model="item.completed"
+                        required={required}
+                        readOnly={readonly}
+                        checked={checked}
+                        onChange={_onChange}
+                        value={value} {...props}
+                        className="sr-only peer"/>
+                    <div className="shrink-0 relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+                    peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700
+                    peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
+                    peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
+                    after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
+                    after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600
+                    dark:peer-checked:bg-green-600"></div>
+                </label>
+            </div>
+            { errors && errors[field] && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors[field] || 'empty!'}</p> }
+        </div>
+    </>)
+}
+
 /** LogText console log text formatting */
 const lt = (color='aqua', size=16) => {
     return `color:${color};font-size:${size}px;`
@@ -208,6 +260,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
 
     //const [selected, setSelected] = useState(statuses[3])
     item['stage'] = item['stage'] || 'tpl'
+    item['blur'] = item['blur'] || false
     const {
         data, setData, post, patch, errors, reset
     } = useForm(item);
@@ -302,6 +355,12 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
         }
     }
 
+    const [blurClass, setBlurClass] = useState('ddd')
+    const blurChange = (e) => {
+        if(e.target.checked) {setBlurClass('blur-[4px]')}
+        else {setBlurClass('')}
+    }
+
     return (
         <>
             <div className="w-full">
@@ -346,7 +405,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                     <InputText
                         field="url"
                         title='Vacancy url' placeholder="Fill vacancy URL"
-                        classname="" type="text"
+                        classname={blurClass} type="text"
                         required={true} readonly={false}
                         data={data} setData={setData} errors={errors}
                         />
@@ -354,7 +413,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                     <InputText
                         field="chat"
                         title='Chat url' placeholder="Fill chat URL"
-                        classname="" type="text"
+                        classname={blurClass} type="text" classWrapp=""
                         // required={true} readonly={false}
                         data={data} setData={setData} errors={errors}
                         />
@@ -362,7 +421,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                     <InputText
                         field="company"
                         title='Company url' placeholder="Fill company URL"
-                        classname="" type="text"
+                        classname={blurClass} type="text"
                         // required={true} readonly={false}
                         data={data} setData={setData} errors={errors}
                         />
@@ -370,7 +429,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                     <InputText
                         field="contact_name"
                         title='Contact name' placeholder="Fill contact name"
-                        classname="" type="text"
+                        classname={blurClass} type="text"
                         // required={true} readonly={false}
                         data={data} setData={setData} errors={errors}
                         />
@@ -445,6 +504,16 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                             { errors.hide && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.hide || 'empty!'}</p> }
                         </div>
                     </div>
+                    <div className="w-full flex gap-4 justify-between">
+                        <InputCheckbox
+                            field="blur"
+                            title="Blur"
+                            change={blurChange}
+                            data={data}
+                            classWrapp={"w-full"}
+                            value={1}
+                        />
+                    </div>
 
                     <InputText
                         field="title"
@@ -460,10 +529,11 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                     <div className="max-w-xl --grow-3 --shrink-0 --w-full/2 --w-[calc(100%/2-var(--spacing)*4)]">
                         <div className="mb-5">
                             <label htmlFor="item-info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Info</label>
-                            <textarea ref={infoInputRef} id="item-info" className="shadow-xs bg-gray-50 border border-gray-300
+                            <textarea ref={infoInputRef} id="item-info" className={cn(`shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
+                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light`,
+                                blurClass)}
                                 placeholder="Input item info value"
                                 onChange={e => setData('info', e.target.value)}
                                 rows={8} autoFocus={true} data-test="ok"
@@ -490,10 +560,11 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                                     ><ClipboardDocumentListIcon aria-hidden={true} className="size-5" />
                                 </button>):"" }
                             </div>
-                            <textarea ref={infoContentRef} id="item-content" className="shadow-xs bg-gray-50 border border-gray-300
+                            <textarea ref={infoContentRef} id="item-content" className={cn(`shadow-xs bg-gray-50 border border-gray-300
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
+                                dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light`,
+                                blurClass)}
                                 placeholder="Input item text value"
                                 onChange={e => setData('content', e.target.value)}
                                 rows={25}
@@ -533,6 +604,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                     <FontAwesomeIcon icon="fa-solid fa-user-secret" className="text-fuchsia-700" />
                     <FontAwesomeIcon icon="fa-solid fa-thumbs-up" className="text-teal-200" />
                     <FontAwesomeIcon icon="fa-brands fa-facebook" className="text-lime-400" />
+                    <span className="hidden blur-[3px] blur-[4px] blur-[5px]"></span>
                 </div>
             </div>
         </>
