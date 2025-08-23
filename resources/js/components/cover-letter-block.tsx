@@ -65,12 +65,12 @@ function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
     }
 
     const mouseDownEvent = (e) => {
-        console.log('mouseDownEvent', e.target)
+        // console.log('mouseDownEvent', e.target)
         setMouseDown(e.target)
     }
 
     const mouseUpEvent = (e) => {
-        console.log('mouseUpEvent', e.target)
+        // console.log('mouseUpEvent', e.target)
         setMouseUp(e.target)
     }
 
@@ -82,12 +82,15 @@ function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
         onMouseUp={mouseUpEvent}
         className="light w-full m-auto max-w-6xl p-6 lg:justify-center lg:p-8 bg-transparen
             bg-[#FDFDFC] text-gray-500 dark:bg-[#0a0a0a]
+            rounded-[calc(var(--radius-lg)+var(--spacing)*3)]
+            "
+        >
+            {/*
+            rounded-[calc(theme(borderRadius-lg)+var(--spacing)*4)]
             rounded-[calc(theme(borderRadius.lg)-1px)]
             rounded-[calc(var(--radius-lg)+var(--spacing)*3)]
             --lg:rounded-[calc(var(--radius-lg)+var(--spacing)*8)]
-            lg:rounded-[calc(theme(borderRadius-lg)+var(--spacing)*4)]
-            "
-        >
+             */}
         <div className="todo-list-container flex flex-col items-center border
             border-purple-700 w-full rounded-md pb-8 pt-8
             bg-[#FDFDFC] --text-[#1b1b18] text-gray-500 dark:bg-[#0a0a0a]">
