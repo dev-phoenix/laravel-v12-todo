@@ -215,11 +215,13 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
     formHandler['formData'] = data
     // console.log('CoverLetterForm', item, data)
 
-    const infoInputRef = useRef(null)
-    const infoContentRef = useRef(null)
+    const textarea = document.createElement('textarea')
+    const textareaC = document.createElement('textarea')
+    const infoInputRef = useRef<HTMLTextAreaElement>(textarea)
+    const infoContentRef = useRef<HTMLTextAreaElement>(textareaC)
 
     useEffect(() =>{
-        if(dialogstate && infoInputRef.current) {
+        if(infoInputRef.current) {
             // console.log('%c useEffect dialogstate', lt(), infoInputRef.current)
             infoInputRef.current.focus()
             setTimeout(() => {infoInputRef.current.focus()},100)
