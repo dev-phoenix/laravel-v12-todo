@@ -28,14 +28,115 @@ import { EyeIcon } from "@heroicons/react/20/solid";
 //     content: string,
 // }
 
+interface PaginationLinkInterface {
+    url: string,
+    label: string,
+    active: boolean,
+}
+
+interface LettersPagination {
+    data: CoverLetter[],
+    links: PaginationLinkInterface[],
+}
+
 interface PageProps {
-    letters: CoverLetter[],
+    // letters: CoverLetter[],
+    letters: LettersPagination,
     title: string,
 }
 interface DialogArgs {
     isOpen: any,
     onClose: any,
     children: any,
+}
+
+interface PaginationData {
+    data:LettersPagination
+}
+
+const PaginationPrevLink = ({data}) => (
+    <a href={data.url} className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">
+        <span className="sr-only">Previous</span>
+        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" className="size-5">
+            <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+        </svg>
+    </a>
+)
+
+const PaginationNextLink = ({data}) => (
+    <a href={data.url} className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">
+        <span className="sr-only">Next</span>
+        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" className="size-5">
+            <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+        </svg>
+    </a>
+)
+
+const PaginationLink = ({data, isfirst=false, islast=false}) => {
+    let label = data.label
+    let className = "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-200 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0"
+    if(data.active) className="relative z-10 inline-flex items-center bg-indigo-500 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+    return (<>
+        <a href={data.url} aria-current={data.active?"page":false} className={className}>{label}</a>
+    </>)
+}
+
+const Pagination = ({data}:PaginationData) => {
+    return (<>
+        <div className="w-full flex items-center justify-between --border-t border-white/10 px-4 mt-4 --py-3 sm:px-6">
+            <div className="flex flex-1 justify-between sm:hidden">
+                <a href="#" className="relative inline-flex items-center rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-white/10">Previous</a>
+                <a href="#" className="relative ml-3 inline-flex items-center rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-white/10">Next</a>
+            </div>
+            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                <div>
+                    <p className="text-sm text-gray-300 flex gap-2">
+                        Showing
+                        <span className="font-medium">{data.from}</span>
+                        to
+                        <span className="font-medium">{data.to}</span>
+                        of
+                        <span className="font-medium">{data.total}</span>
+                        results
+                    </p>
+                </div>
+                <div>
+                    <nav aria-label="Pagination" className="isolate inline-flex -space-x-px rounded-md">
+                    {data.links.map((ln, ind, arr)=>{
+                        let isfirst=false, islast=false;
+                        if(ind == 0) isfirst = true
+                        if(ind == arr.length - 1) islast = true
+                        return (<>
+                            {isfirst && <PaginationPrevLink data={ln} /> }
+                            {!isfirst && !islast && <PaginationLink data={ln} isfirst={isfirst} islast={islast} />}
+                            {islast && <PaginationNextLink data={ln} /> }
+                        </>
+                    )})}
+                        {/* <a href="#" className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">
+                            <span className="sr-only">Previous</span>
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" className="size-5">
+                                <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </a> */}
+                        {/*<!-- Current: "z-10 text-white focus-visible:outline-2 focus-visible:outline-offset-2 bg-indigo-500 focus-visible:outline-indigo-500", Default: "inset-ring focus:outline-offset-0 text-gray-200 inset-ring-gray-700 hover:bg-white/5" -->*/}
+                        {/* <a href="#" aria-current="page" className="relative z-10 inline-flex items-center bg-indigo-500 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">1</a>
+                        <a href="#" className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-200 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">2</a>
+                        <a href="#" className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-200 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
+                        <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-400 inset-ring inset-ring-gray-700 focus:outline-offset-0">...</span>
+                        <a href="#" className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-200 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
+                        <a href="#" className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-200 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">9</a>
+                        <a href="#" className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-200 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">10</a>
+                        <a href="#" className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 inset-ring inset-ring-gray-700 hover:bg-white/5 focus:z-20 focus:outline-offset-0">
+                            <span className="sr-only">Next</span>
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" className="size-5">
+                                <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </a> */}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        </>)
 }
 
 function CLDialog({ isOpen=0, onClose=0, children='' }:DialogArgs) {
@@ -142,8 +243,9 @@ function CoverLetterBlock ({letters, title}: PageProps){
         "info" : 'Info',
         "content" : '',
     }
-    // console.log('%c letters', 'color: yellow');
-    // console.table(letters);
+    console.log('%c letters', 'color: yellow');
+    console.table(letters);
+    console.log(letters);
     const [CLDialogOpen, setCLDialogOpen] = useState(false);
     const [clItem, setClItem] = useState(itemEmpty);
 
@@ -218,7 +320,7 @@ function CoverLetterBlock ({letters, title}: PageProps){
                             <h3>{title}:</h3>
                             <div className="w-full" key={"some"}>
 
-                                {letters.map((cl,ind)=>(
+                                {letters.data.map((cl,ind)=>(
                                     <CoverLetterItem key={cl.id}
                                         item={cl}
                                         select={selectItem}
@@ -227,6 +329,7 @@ function CoverLetterBlock ({letters, title}: PageProps){
                                 ))}
 
                             </div>
+                            <Pagination data={letters} />
                         </div>
                     </div>
                 </div>

@@ -118,7 +118,7 @@ function CLStatusList({list, value='tpl', setdata, field, defaultValue='tpl'}: a
 
                 <ListboxOptions
                     transition
-                    className="absolute z-10 mt-1 max-h-66 w-full overflow-auto rounded-md
+                    className="absolute z-10 mt-1 max-h-90 w-full overflow-auto rounded-md
                         bg-gray-800 py-1 text-base outline-1 -outline-offset-1 outline-white/10
                         data-leave:transition data-leave:duration-100 data-leave:ease-in
                         data-closed:data-leave:opacity-0 sm:text-sm"
@@ -402,42 +402,6 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                             </>
                         )
                     }
-                    <InputText
-                        field="url"
-                        title='Vacancy url' placeholder="Fill vacancy URL"
-                        classname={blurClass} type="text"
-                        required={true} readonly={false}
-                        data={data} setData={setData} errors={errors}
-                        />
-
-                    <InputText
-                        field="chat"
-                        title='Chat url' placeholder="Fill chat URL"
-                        classname={blurClass} type="text" classWrapp=""
-                        // required={true} readonly={false}
-                        data={data} setData={setData} errors={errors}
-                        />
-
-                    <InputText
-                        field="company"
-                        title='Company url' placeholder="Fill company URL"
-                        classname={blurClass} type="text"
-                        // required={true} readonly={false}
-                        data={data} setData={setData} errors={errors}
-                        />
-
-                    <InputText
-                        field="contact_name"
-                        title='Contact name' placeholder="Fill contact name"
-                        classname={blurClass} type="text"
-                        // required={true} readonly={false}
-                        data={data} setData={setData} errors={errors}
-                        />
-
-                    {/* <div className="w-full flex gap-4 justify-between flex-col">
-                        <TWSelectMenu />
-                        <CLStatusList list={statuses} />
-                    </div> */}
 
                     <div className="w-full flex gap-4 justify-between">
 
@@ -504,6 +468,51 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                             { errors.hide && <p className="mb-5 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> It's error: {errors.hide || 'empty!'}</p> }
                         </div>
                     </div>
+
+                    <InputText
+                        field="url"
+                        title='Vacancy url' placeholder="Fill vacancy URL"
+                        classname={blurClass} type="text"
+                        required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
+
+                    <InputText
+                        field="chat"
+                        title='Chat url' placeholder="Fill chat URL"
+                        classname={blurClass} type="text" classWrapp=""
+                        // required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
+
+                    <InputText
+                        field="company"
+                        title='Company url' placeholder="Fill company URL"
+                        classname={blurClass} type="text"
+                        // required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
+
+                    <InputText
+                        field="contact_name"
+                        title='Contact name' placeholder="Fill contact name"
+                        classname={blurClass} type="text"
+                        // required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
+
+                    {/* <div className="w-full flex gap-4 justify-between flex-col">
+                        <TWSelectMenu />
+                        <CLStatusList list={statuses} />
+                    </div> */}
+
+                    <InputText
+                        field="title"
+                        title='Title' placeholder="Fill title"
+                        classWrapp="max-w-xl" classname="" type="text"
+                        required={true} readonly={false}
+                        data={data} setData={setData} errors={errors}
+                        />
                     <div className="w-full flex gap-4 justify-between">
                         <InputCheckbox
                             field="blur"
@@ -514,14 +523,6 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                             value={1}
                         />
                     </div>
-
-                    <InputText
-                        field="title"
-                        title='Title' placeholder="Fill title"
-                        classWrapp="max-w-xl" classname="" type="text"
-                        required={true} readonly={false}
-                        data={data} setData={setData} errors={errors}
-                        />
                 </div>
 
                 <div className="----w-1/2 lg:w-[calc(100%/2-var(--spacing)*4)]">

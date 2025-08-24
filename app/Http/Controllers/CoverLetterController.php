@@ -15,7 +15,11 @@ class CoverLetterController extends Controller
     public function index()
     {
         return Inertia::render('coverletters', [
-            'letters' => CoverLetter::select('*')->where('hide', 0)->latest()->get(),
+            'letters' => CoverLetter::select('*')->where('hide', 0)->latest()
+            //->get()
+            // ->simplePaginate(3)
+            ->paginate(10)
+            ,
             // 'lettersHidden' => CoverLetter::select('*')->where('hide', 1)->latest()->get(),
             'title' => "Cover Letters",
             'laraVersion' => Application::VERSION,
@@ -29,7 +33,10 @@ class CoverLetterController extends Controller
     {
         return Inertia::render('coverletters', [ // clhidden
             // 'letters' => CoverLetter::select('*')->where('hide', 0)->latest()->get(),
-            'letters' => CoverLetter::select('*')->where('hide', 1)->latest()->get(),
+            'letters' => CoverLetter::select('*')->where('hide', 1)->latest()
+            //->get()
+            ->paginate(30)
+            ,
             'title' => "Hidden Cover Letters",
             'laraVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
