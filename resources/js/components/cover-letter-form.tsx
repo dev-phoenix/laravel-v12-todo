@@ -271,8 +271,10 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
 
     const textarea = document.createElement('textarea')
     const textareaC = document.createElement('textarea')
+    const btnUpdate = document.createElement('button')
     const infoInputRef = useRef<HTMLTextAreaElement>(textarea)
     const infoContentRef = useRef<HTMLTextAreaElement>(textareaC)
+    const btnUpdateRef = useRef<HTMLButtonElement>(btnUpdate)
 
     useEffect(() =>{
         if(infoInputRef.current) {
@@ -283,10 +285,35 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
         }
     },[dialogstate])
 
-    const sendLetter = (e) => {
-        // console.log('sendLetter e', e);
-        // console.log('sendLetter item', item);
-        // console.log('sendLetter data', data);
+    useEffect(() => {
+        document.addEventListener('keydown', keydown, true)
+        document.addEventListener('keyup', keyup, true)
+    }, [])
+
+    let btnTrim = false;
+
+    function keydown(ev:any){
+        if(ev.ctrlKey && ev.keyCode == 83){
+            ev.preventDefault()
+        }
+        if(btnTrim == false && ev.ctrlKey && ev.keyCode == 83){
+            ev.preventDefault()
+            btnTrim = true
+            return false;
+        }
+    }
+
+
+    function keyup(ev:any){
+        if(btnTrim == true && ev.ctrlKey && ev.keyCode == 83){
+            ev.preventDefault()
+            // sendLetter(ev)
+            if(btnUpdateRef.current)btnUpdateRef.current.click()
+            btnTrim = false;
+        }
+    }
+
+    const sendLetter = (e:any) => {
         e.preventDefault();
 
         if(data.id){
@@ -297,7 +324,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
         // select(data)
     }
 
-    const addLetter = (e) => {
+    const addLetter = (e:any) => {
         post(route('coverletters.store'), {
             preserveScroll: true,
             onSuccess: () => {
@@ -612,7 +639,7 @@ export function CoverLetterForm({item, select, close, formHandler, dialogstate}:
                         </button>
                     {data.id &&
                         (
-                        <button type="button" className={cn(` text-white bg-blue-700 hover:bg-blue-800 --focus:ring-4
+                        <button ref={btnUpdateRef} type="button" className={cn(` text-white bg-blue-700 hover:bg-blue-800 --focus:ring-4
                             --focus:outline-none --focus:ring-blue-300 font-medium rounded-lg text-sm text-center
                             dark:bg-blue-600 dark:hover:bg-blue-700 --dark:focus:ring-blue-800
                             cursor-pointer`,
